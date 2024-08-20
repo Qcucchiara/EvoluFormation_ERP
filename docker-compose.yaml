@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  EvoluFormation:
+    container_name: "b08-db"
+    image: "postgres:latest"
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    volumes:
+      - "./db-data/:/var/lib/postgresql/data/"
