@@ -6,6 +6,7 @@ import { UpdatePersonDto } from './dto/update-person.dto';
 @Controller('person')
 export class PersonController {
   constructor(private readonly personService: PersonService) {}
+  // TODO: Créer un dossier entité spécifique par role (trainer student etc )
 
   @Post()
   create(@Body() createPersonDto: CreatePersonDto) {

@@ -1,26 +1,33 @@
-import { Injectable } from '@nestjs/common';
-import { CreateResourceDto } from './dto/create-resource.dto';
-import { UpdateResourceDto } from './dto/update-resource.dto';
+import { Injectable } from "@nestjs/common";
+// import { CreateResourceDto } from './dto/create-resource.dto';
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class ResourceService {
-  create(createResourceDto: CreateResourceDto) {
-    return 'This action adds a new resource';
+  constructor(private prisma: PrismaService) {}
+  create() {
+    return this.prisma.ressource.create({
+      data: {
+        name: "test",
+        type: "pour voir",
+        price: 5.42,
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all resource`;
+    return this.prisma.ressource.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} resource`;
+  findOne(id: string) {
+    return this.prisma.ressource.findUnique({ where: { id: id } });
   }
 
-  update(id: number, updateResourceDto: UpdateResourceDto) {
-    return `This action updates a #${id} resource`;
+  update(id: string) {
+    return this.prisma.ressource;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} resource`;
   }
 }

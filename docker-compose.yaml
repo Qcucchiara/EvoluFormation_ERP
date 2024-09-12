@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  EvoluFormationAPI:
+  # EvoluFormationAPI:
 
   EvoluFormationSQL:
     container_name: "PostgresDB"
@@ -9,15 +9,16 @@ services:
     env_file:
       - .env
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DATABASE}
-    volumes:
-      - "./db-data/:/var/lib/postgresql/data/"
+    # volumes:
+    # - "./db-data/:/var/lib/postgresql/data/"
     networks:
       - EvoluFormationNetwork
+
   EvoluFormationMongoDB:
     container_name: "mongoDB"
     image: mongo:6.0
@@ -26,13 +27,13 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
     ports:
       - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
+    # volumes:
+    #   - mongo_data:/data/db
     networks:
       - EvoluFormationNetwork
 networks:
   EvoluFormationNetwork:
-    # external: true
+    external: true
 #### Exemple du brief 7 en bas
 
 #     version: '3.8'
