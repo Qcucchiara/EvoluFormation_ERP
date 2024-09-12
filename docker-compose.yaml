@@ -1,9 +1,11 @@
 version: "3"
 
 services:
-  EvoluFormation:
-    container_name: "b08-db"
-    image: "postgres:latest"
+  EvoluFormationAPI:
+
+  EvoluFormationSQL:
+    container_name: "PostgresDB"
+    image: "postgres:16.4"
     env_file:
       - .env
     ports:
@@ -14,3 +16,47 @@ services:
       POSTGRES_DB: ${POSTGRES_DATABASE}
     volumes:
       - "./db-data/:/var/lib/postgresql/data/"
+    networks:
+      - EvoluFormationNetwork
+  EvoluFormationMongoDB:
+    container_name: "mongoDB"
+    image: mongo:6.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - EvoluFormationNetwork
+networks:
+  EvoluFormationNetwork:
+    # external: true
+#### Exemple du brief 7 en bas
+
+#     version: '3.8'
+# services:
+#   cryptcoin:
+#     image: postgres:13
+#     ports:
+#       - 5432:5432
+#     environment:
+#       POSTGRES_USER: uDr4KjGcpEm6N5F3BqhxAT
+#       POSTGRES_PASSWORD: 12xt6h4fWf4QL9WiP5syZ887S8Si54giDizdB8L685aBiBkBVaW87MS3bWc22ba3L9YT3
+#       POSTGRES_DB: cW76664NDPkmc
+#     networks:
+#       - CRY
+#   test-db:
+#     image: postgres:13
+#     ports:
+#       - 5434:5434
+#     environment:
+#       POSTGRES_USER: uDr4KjGcpEm6N5F3BqhxAT
+#       POSTGRES_PASSWORD: 12xt6h4fWf4QL9WiP5syZ887S8Si54giDizdB8L685aBiBkBVaW87MS3bWc22ba3L9YT3
+#       POSTGRES_DB: cW76664NDPkmc
+#     networks:
+#       - CRY
+# networks:
+#   CRY:
+#     external: true
