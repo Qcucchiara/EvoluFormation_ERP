@@ -19,9 +19,9 @@ export class RoleService {
     return this.prisma.role.findUnique({ where: { id: id } });
   }
 
-  update(id: string, dto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
-  }
+  // update(id: string, dto: UpdateRoleDto) {
+  //   return `This action updates a #${id} role`;
+  // }
 
   remove(id: string) {
     return this.prisma.role.delete({ where: { id: id } });

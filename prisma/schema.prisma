@@ -128,16 +128,23 @@ model Training_objective {
 model Ressource {
   id               String  @id @default(uuid())
   name             String
-  type             String
+  type_id          String
   price            Float
   adress           String?
   postal_code      String?
   city             String?
   acquisition_date String?
 
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  comments   Comment[]
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
+  comments       Comment[]
+  Ressource_type Ressource_type @relation(fields: [type_id], references: [id])
+}
+
+model Ressource_type {
+  id        String      @id @default(uuid())
+  name      String
+  ressource Ressource[]
 }
 
 model Comment {
