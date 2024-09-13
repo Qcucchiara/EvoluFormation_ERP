@@ -9,7 +9,7 @@ export class ResourceService {
     return this.prisma.ressource.create({
       data: {
         name: "test",
-        type: "pour voir",
+        type_id: "pour voir",
         price: 5.42,
       },
     });
