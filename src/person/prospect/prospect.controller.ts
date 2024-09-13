@@ -12,7 +12,7 @@ export class prospectController {
   }
 
   @Patch()
-  updateProspect(@Body() dto: any){
-    return this.prospectService.updateProspect(dto)
+  updateProspect(@Body() dto: any) {
+    return this.prospectService.updateProspect(dto);
   }
 }

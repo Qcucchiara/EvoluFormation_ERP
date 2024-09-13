@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCompanyDto } from './dto/create-company.dto';
-import { UpdateCompanyDto } from './dto/update-company.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateCompanyDto } from "./dto/create-company.dto";
+import { UpdateCompanyDto } from "./dto/update-company.dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class CompanyService {
-  create(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
+  constructor(private prisma: PrismaService) {}
+
+  create(dto: CreateCompanyDto) {
+    // TODO: si l'url est ajouté, faire une vérification qu'elle retourne une code HTTP correct de ce style là V
+    // const truc = await fetch("https://hub.docker.com/_/help-world");
+    // console.log(truc.status);
+
+    return this.prisma.company.create({ data: { ...dto } });
   }
 
   findAll() {
-    return `This action returns all company`;
+    return this.prisma.company.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  findOne(id: string) {
+    // TODO: Chercher les dossiers associés à l'entreprise
+    return this.prisma.company.findUnique({ where: { id: id } });
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  update(id: string, dto: UpdateCompanyDto) {
+    return this.prisma.company.update({ where: { id: id }, data: { ...dto } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  remove(id: string) {
+    return this.prisma.company.delete({ where: { id: id } });
   }
 }
