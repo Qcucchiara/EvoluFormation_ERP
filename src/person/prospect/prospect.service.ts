@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { createProspectDto } from "../dto";
-import { Role, RolePerson } from "src/utils/const";
+import { RolePerson } from "src/utils/const";
 
 @Injectable()
 export class ProspectService {
@@ -27,7 +27,7 @@ export class ProspectService {
       where: { name: RolePerson.PROSPECT },
     });
     if (!role_id || !role_id.id) {
-      //Erreur serveur
+      //Erreur serveur (erreur de dev)
       throw new ForbiddenException("role non trouver");
     }
     // TODO trouver et verifier si l'entreprise existe
@@ -48,7 +48,7 @@ export class ProspectService {
         role_id: role_id.id,
       },
     });
-    return { message: "Prospect créer avec succès", status: 201 };
+    return { message: "Prospect crée avec succès", status: 201 };
   }
 
   async updateProspect(dto: any) {}
