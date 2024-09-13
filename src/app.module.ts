@@ -11,6 +11,7 @@ import { ObjectiveBpfModule } from "./objective_bpf/objective_bpf.module";
 import { TrainingObjectiveModule } from "./training_objective/training_objective.module";
 import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ObjectiveBpfModule,
     TrainingObjectiveModule,
     PrismaModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
