@@ -41,13 +41,13 @@ export class ResourceService {
           price: dto.price,
           adress: dto.adress,
           postal_code: dto.postal_code,
-          city: dto.ciy
+          city: dto.ciy,
         },
       });
     }
   }
 
   remove(id: string) {
-    return this.prisma.ressource.delete({where:{id:id}})
+    return this.prisma.ressource.delete({ where: { id: id } });
   }
 }
