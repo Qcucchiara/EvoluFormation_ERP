@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { createProspectDto } from "../dto";
-import { Role } from "src/utils/const";
+import { Role, RolePerson } from "src/utils/const";
 
 @Injectable()
 export class ProspectService {
@@ -24,7 +24,7 @@ export class ProspectService {
       throw new ForbiddenException("Prospect déja existant");
     }
     const role_id = await this.prisma.role.findUnique({
-      where: { name: Role.PROSPECT },
+      where: { name: RolePerson.PROSPECT },
     });
     if (!role_id || !role_id.id) {
       //Erreur serveur
@@ -32,7 +32,7 @@ export class ProspectService {
     }
     // TODO trouver et verifier si l'entreprise existe
     // TODO faire le type entreprise auto entrepreneur etc
-    // TODO faire les commentaires
+    // TODO faire les commentaires entité
     await this.prisma.person.create({
       data: {
         first_name: dto.first_name,
@@ -41,7 +41,7 @@ export class ProspectService {
         civility: dto.civility,
         phone: dto.phone,
         // type: dto.type,
-        //company: dto.company
+        //company: dto.company????
         city: dto.city,
         street: dto.street,
         postal_code: dto.postal_code,
