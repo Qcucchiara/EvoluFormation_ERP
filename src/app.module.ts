@@ -12,6 +12,7 @@ import { TrainingObjectiveModule } from "./training_objective/training_objective
 import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+import { RessourceTypeModule } from './ressource_type/ressource_type.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuthModule } from './auth/auth.module';
     TrainingObjectiveModule,
     PrismaModule,
     AuthModule,
+    RessourceTypeModule,
   ],
 })
 export class AppModule {}

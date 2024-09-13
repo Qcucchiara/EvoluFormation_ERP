@@ -8,15 +8,15 @@ import {
   Delete,
 } from "@nestjs/common";
 import { ResourceService } from "./resource.service";
-// import { UpdateResourceDto } from "./dto/update-resource.dto";
+import { CreateResourceDto, UpdateResourceDto } from "./dto";
 
 @Controller("resource")
 export class ResourceController {
   constructor(private readonly resourceService: ResourceService) {}
 
   @Post()
-  create() {
-    return this.resourceService.create();
+  create(@Body() dto: CreateResourceDto) {
+    return this.resourceService.create(dto);
   }
 
   @Get()
@@ -30,8 +30,8 @@ export class ResourceController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string) {
-    return this.resourceService.update(id);
+  update(@Param("id") id: string, @Body() dto: UpdateResourceDto) {
+    return this.resourceService.update(id, dto);
   }
 
   @Delete(":id")

@@ -1,4 +1,1 @@
-{
-  "trailingComma": "all",
-  "plugins": ["prettier-plugin-prisma"]
-}
+{ "trailingComma": "all", "tabWidth": 2, "plugins": ["prettier-plugin-prisma"] }
