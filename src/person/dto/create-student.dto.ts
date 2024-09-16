@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-export class createProspectDto {
+export class createStudentDto {
   @IsString()
   @IsNotEmpty()
   civility: string;
@@ -25,7 +25,6 @@ export class createProspectDto {
   @IsString()
   @IsOptional()
   type: string;
-
   @IsString()
   @IsNotEmpty()
   company: string;

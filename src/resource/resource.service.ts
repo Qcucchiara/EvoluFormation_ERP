@@ -10,7 +10,7 @@ export class ResourceService {
     return this.prisma.ressource.create({ data: { ...dto } });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.ressource.findMany();
   }
 

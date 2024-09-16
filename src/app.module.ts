@@ -10,9 +10,9 @@ import { SpecialityBpfModule } from "./speciality_bpf/speciality_bpf.module";
 import { ObjectiveBpfModule } from "./objective_bpf/objective_bpf.module";
 import { TrainingObjectiveModule } from "./training_objective/training_objective.module";
 import { ConfigModule } from "@nestjs/config";
-import { PrismaModule } from './prisma/prisma.module';
-import { AuthModule } from './auth/auth.module';
-import { RessourceTypeModule } from './ressource_type/ressource_type.module';
+import { PrismaModule } from "./prisma/prisma.module";
+import { AuthModule } from "./auth/auth.module";
+import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
 
 @Module({
   imports: [
