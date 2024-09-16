@@ -114,7 +114,7 @@ CREATE TABLE "Training_objective" (
 CREATE TABLE "Ressource" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "type_id" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "adress" TEXT,
     "postal_code" TEXT,
@@ -124,6 +124,14 @@ CREATE TABLE "Ressource" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Ressource_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Ressource_type" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "Ressource_type_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -161,6 +169,9 @@ CREATE UNIQUE INDEX "Person_email_key" ON "Person"("email");
 CREATE UNIQUE INDEX "Person_phone_key" ON "Person"("phone");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Company_siret_key" ON "Company"("siret");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Module_speciality_bpf_id_key" ON "Module"("speciality_bpf_id");
 
 -- CreateIndex
@@ -195,6 +206,9 @@ ALTER TABLE "Module" ADD CONSTRAINT "Module_objective_bpf_id_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "Module" ADD CONSTRAINT "Module_training_objective_id_fkey" FOREIGN KEY ("training_objective_id") REFERENCES "Training_objective"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Ressource" ADD CONSTRAINT "Ressource_type_id_fkey" FOREIGN KEY ("type_id") REFERENCES "Ressource_type"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "Comment_category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
