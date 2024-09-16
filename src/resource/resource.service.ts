@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 // import { CreateResourceDto } from './dto/create-resource.dto';
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateResourceDto, UpdateResourceDto } from "./dto";
+import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 
 @Injectable()
 export class ResourceService {
@@ -47,9 +48,14 @@ export class ResourceService {
     }
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     try {
-      return this.prisma.ressource.delete({ where: { id: id } });
-    } catch (error) {}
+      return await this.prisma.ressource.delete({ where: { id: id } });
+    } catch (error) {
+      return handleDeleteOnRestrictResponse(this.prisma, id, "ressource", [
+        "comment",
+        "trucquidevraitpasmarcher",
+      ]);
+    }
   }
 }

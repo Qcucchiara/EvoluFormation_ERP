@@ -31,7 +31,6 @@ export class RessourceTypeService {
     try {
       return await this.prisma.ressource_type.delete({ where: { id: id } });
     } catch (error) {
-      console.log("_____________________________________________________\n");
       return handleDeleteOnRestrictResponse(this.prisma, id, "type", [
         "ressource",
         "trucquidevraitpasmarcher",
