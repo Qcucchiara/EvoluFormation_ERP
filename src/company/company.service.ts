@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from "@nestjs/common";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -8,31 +13,16 @@ export class CompanyService {
   constructor(private prisma: PrismaService) {}
 
   create(dto: CreateCompanyDto) {
-    try {
-      // TODO: si l'url est ajouté, faire une vérification qu'elle retourne une code HTTP correct ↙(de ce style là)
-      // const truc = await fetch("https://hub.docker.com/_/help-world");
-      // console.log(truc.status);
-      const CompanyWithSameName = this.prisma.company.findFirst({
-        where: { name: dto.name },
-      });
-      if (CompanyWithSameName) {
-        throw new ForbiddenException("nom déjà pri");
-      } else {
-        return this.prisma.company.create({ data: { ...dto } });
-      }
-    } catch (error) {
-      if (
-        Object.is(
-          String(error),
-          String(new ForbiddenException("nom déjà pris")),
-        )
-      ) {
-        return error.message;
-      } else {
-        return error.message;
-
-        console.log("object");
-      }
+    // TODO: si l'url est ajouté, faire une vérification qu'elle retourne une code HTTP correct ↙(de ce style là)
+    // const truc = await fetch("https://hub.docker.com/_/help-world");
+    // console.log(truc.status);
+    const CompanyWithSameName = this.prisma.company.findFirst({
+      where: { name: dto.name },
+    });
+    if (CompanyWithSameName) {
+      throw new ForbiddenException();
+    } else {
+      return this.prisma.company.create({ data: { ...dto } });
     }
   }
 
