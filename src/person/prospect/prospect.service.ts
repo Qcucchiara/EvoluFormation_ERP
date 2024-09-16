@@ -10,14 +10,7 @@ export class ProspectService {
   async insertProspect(dto: createProspectDto) {
     const existingProspect = await this.prisma.person.findFirst({
       where: {
-        OR: [
-          {
-            email: dto.email,
-          },
-          {
-            phone: dto.phone,
-          },
-        ],
+        OR: [{ email: dto.email }, { phone: dto.phone }],
       },
     });
     if (existingProspect) {
@@ -53,18 +46,14 @@ export class ProspectService {
 
   async updateProspect(dto: updateProspectDto) {
     const existingProspect = await this.prisma.person.findFirst({
-      where: {
-        id: dto.id,
-      },
+      where: { id: dto.id },
     });
     if (!existingProspect || !existingProspect.id) {
       throw new ForbiddenException("Ce prospect n'existe pas");
     }
     if (dto.email) {
       const isEmailUsed = await this.prisma.person.findFirst({
-        where: {
-          email: dto.email,
-        },
+        where: { email: dto.email },
       });
       if (isEmailUsed) {
         throw new ForbiddenException("Email déja utiliser!");
@@ -81,14 +70,34 @@ export class ProspectService {
       }
     }
     delete dto.company;
-    const test = await this.prisma.person.update({
+    await this.prisma.person.update({
+      where: { id: dto.id },
+      data: { ...dto },
+    });
+    return { Message: "Modification effectuer", status: "200" };
+  }
+  async getAllProspect() {
+    const prospectRole = await this.prisma.role.findFirst({
       where: {
-        id: dto.id,
-      },
-      data: {
-        ...dto,
+        name: RolePerson.PROSPECT,
       },
     });
-    return {Message: "Modification effectuer", status:"200"};
+    return await this.prisma.person.findMany({
+      where: {
+        role_id: prospectRole.id,
+      },
+    });
+  }
+  async deleteProspect(id: string) {
+    const existingProspect = await this.prisma.person.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (existingProspect) {
+      await this.prisma.person.delete({ where: { id: id } });
+      return { message: "Prospect supprimer", statusCode: 200 };
+    }
+    throw new ForbiddenException("Prospect non trouver");
   }
 }
