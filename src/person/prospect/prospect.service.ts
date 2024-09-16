@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { createProspectDto } from "../dto";
+import { createProspectDto, updateProspectDto } from "../dto";
 import { RolePerson } from "src/utils/const";
 
 @Injectable()
@@ -51,5 +51,44 @@ export class ProspectService {
     return { message: "Prospect crée avec succès", status: 201 };
   }
 
-  async updateProspect(dto: any) {}
+  async updateProspect(dto: updateProspectDto) {
+    const existingProspect = await this.prisma.person.findFirst({
+      where: {
+        id: dto.id,
+      },
+    });
+    if (!existingProspect || !existingProspect.id) {
+      throw new ForbiddenException("Ce prospect n'existe pas");
+    }
+    if (dto.email) {
+      const isEmailUsed = await this.prisma.person.findFirst({
+        where: {
+          email: dto.email,
+        },
+      });
+      if (isEmailUsed) {
+        throw new ForbiddenException("Email déja utiliser!");
+      }
+    }
+    if (dto.phone) {
+      const isPhoneUsed = await this.prisma.person.findFirst({
+        where: {
+          phone: dto.phone,
+        },
+      });
+      if (isPhoneUsed) {
+        throw new ForbiddenException("Téléphone déja utiliser!");
+      }
+    }
+    delete dto.company;
+    const test = await this.prisma.person.update({
+      where: {
+        id: dto.id,
+      },
+      data: {
+        ...dto,
+      },
+    });
+    return test;
+  }
 }

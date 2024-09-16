@@ -1,6 +1,6 @@
 import { Body, Controller, Patch, Post } from "@nestjs/common";
 import { ProspectService } from "./prospect.service";
-import { createProspectDto } from "../dto/index";
+import { createProspectDto, updateProspectDto } from "../dto/index";
 
 @Controller("prospect")
 export class prospectController {
@@ -12,7 +12,7 @@ export class prospectController {
   }
 
   @Patch()
-  updateProspect(@Body() dto: any){
-    return this.prospectService.updateProspect(dto)
+  updateProspect(@Body() dto: updateProspectDto) {
+    return this.prospectService.updateProspect(dto);
   }
 }
