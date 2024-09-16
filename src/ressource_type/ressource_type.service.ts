@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CreateRessourceTypeDto } from "./dto/create-ressource_type.dto";
 import { UpdateRessourceTypeDto } from "./dto/update-ressource_type.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 
 @Injectable()
 export class RessourceTypeService {
@@ -26,7 +27,15 @@ export class RessourceTypeService {
     });
   }
 
-  remove(id: string) {
-    return this.prisma.ressource_type.delete({ where: { id: id } });
+  async remove(id: string) {
+    try {
+      return await this.prisma.ressource_type.delete({ where: { id: id } });
+    } catch (error) {
+      console.log("_____________________________________________________\n");
+      return handleDeleteOnRestrictResponse(this.prisma, id, "type", [
+        "ressource",
+        "trucquidevraitpasmarcher",
+      ]);
+    }
   }
 }

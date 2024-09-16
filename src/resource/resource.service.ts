@@ -48,6 +48,8 @@ export class ResourceService {
   }
 
   remove(id: string) {
-    return this.prisma.ressource.delete({ where: { id: id } });
+    try {
+      return this.prisma.ressource.delete({ where: { id: id } });
+    } catch (error) {}
   }
 }

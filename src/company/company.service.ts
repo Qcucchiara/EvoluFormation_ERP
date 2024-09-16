@@ -114,3 +114,9 @@ export class CompanyService {
     }
   }
 }
+
+try {
+} catch (error) {
+  try {
+  } catch (e) {}
+}
