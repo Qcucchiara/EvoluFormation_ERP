@@ -42,7 +42,7 @@ export class ProspectService {
           role_id: role_id.id,
         },
       });
-      return { message: "Prospect crée avec succès", status: 201 };
+      return { message: "Prospect crée avec succès", statusCode: 201 };
     } catch (error) {
       return error;
     }
@@ -79,7 +79,7 @@ export class ProspectService {
         where: { id: dto.id },
         data: { ...dto },
       });
-      return { Message: "Modification effectuer", status: "200" };
+      return { message: "Modification effectuer", statusCode: "200" };
     } catch (error) {
       return error;
     }

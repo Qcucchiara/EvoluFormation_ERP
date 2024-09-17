@@ -59,7 +59,7 @@ model Company_has_contact {
 model Company {
   id           String  @id @default(uuid())
   name         String
-  siret        String?
+  siret        String? @unique
   street       String?
   postal_code  String?
   city         String?
