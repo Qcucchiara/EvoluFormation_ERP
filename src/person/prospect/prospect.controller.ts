@@ -18,7 +18,10 @@ export class prospectController {
   getAllProspect() {
     return this.prospectService.getAllProspect();
   }
-
+  @Get("/:id")
+  getProspectById(@Param("id") id: string) {
+    return this.prospectService.getProspectById(id);
+  }
   @Post()
   insertProspect(@Body() dto: createProspectDto) {
     return this.prospectService.insertProspect(dto);
