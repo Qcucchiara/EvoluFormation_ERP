@@ -13,6 +13,7 @@ import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
+import { MongooseModule } from './mongoose/mongoose.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
     PrismaModule,
     AuthModule,
     RessourceTypeModule,
+    MongooseModule,
   ],
 })
 export class AppModule {}

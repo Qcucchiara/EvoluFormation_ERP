@@ -1,10 +1,21 @@
+import { ConflictException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-
+/**
+ *
+ * @param prisma > import prisma
+ * @param entityId > primary kay of the entry
+ * @param nameFK > name of the foreign keys without the "_id" suffix
+ * @param listRelationModels > name of the method of each models
+ * @param safeMode > if yes, return an array, if no, throw an error with the array.
+ *
+ * @returns > return an array of object per valid relation | and a string if the relation is wrong
+ */
 export default async function handleDeleteOnRestrictResponse(
   prisma: PrismaService,
   entityId: string,
   nameFK: string,
   listRelationModels: string[],
+  safeMode?: boolean,
 ) {
   let res = [];
 
@@ -21,5 +32,13 @@ export default async function handleDeleteOnRestrictResponse(
     }
   }
 
+  if (!safeMode) {
+    throw new ConflictException({
+      message:
+        "des conflits avec d'autres tableaux ont été trouvés. \n" +
+        "Veuillez corriger les contraintes avant de recommencer.",
+      content: res,
+    });
+  }
   return res;
 }

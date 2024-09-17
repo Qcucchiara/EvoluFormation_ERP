@@ -1,12 +1,15 @@
 import {
+  ConflictException,
   ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
 } from "@nestjs/common";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 
 @Injectable()
 export class CompanyService {
@@ -89,34 +92,32 @@ export class CompanyService {
 
   async remove(id: string) {
     try {
-      await this.prisma.company.delete({ where: { id: id } });
-    } catch (error) {
-      console.log(
-        "les conflits possibles sont les commentaires, \net les contacts de l'entreprise",
-      );
-      const restrictedDeleteComments = await this.prisma.comment.findMany({
-        where: { company_id: id },
+      const company = await this.prisma.company.findUnique({
+        where: { id: id },
       });
-      const restrictedDeleteContacts =
-        await this.prisma.company_has_contact.findMany({
-          where: { company_id: id },
-        });
-      return {
-        message:
-          "des conflits avec d'autres tableaux ont été trouvés. \n" +
-          "Veuillez corriger les contraintes avant de recommencer.",
-        content: {
-          Comments: restrictedDeleteComments,
-          Contacts: restrictedDeleteContacts,
-        },
-        statusCode: 409,
-      };
+
+      if (!company) {
+        throw new NotFoundException(
+          "L'entreprise n'a pas été trouvé dans la base de données.",
+        );
+      }
+
+      return await this.prisma.company.delete({ where: { id: id } });
+    } catch (error) {
+      const content = await handleDeleteOnRestrictResponse(
+        this.prisma,
+        id,
+        "company",
+        ["company_has_contact", "comment"],
+      );
+
+      // return {
+      //   message:
+      //     "des conflits avec d'autres tableaux ont été trouvés. \n" +
+      //     "Veuillez corriger les contraintes avant de recommencer.",
+      //   content: content,
+      //   statusCode: 409,
+      // };
     }
   }
-}
-
-try {
-} catch (error) {
-  try {
-  } catch (e) {}
 }
