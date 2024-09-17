@@ -1,39 +1,49 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from "class-validator";
 
-export class createStudentDto {
-  
+export class updateStudentDto {
+  @IsString()
+  @IsUUID()
+  @IsNotEmpty()
+  id: string;
+
   // peut être pas nécessaire
   // @IsString()
   // @IsNotEmpty()
   // civility: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   first_name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   last_name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
   email: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   phone: string;
- 
+
   // c'est un étudiant donc pas besoin
-  // @IsString() 
+  // @IsString()
   // @IsOptional()
   // type: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   company: string;
 
-  // je ne vois pas l'utilité 
+  // je ne vois pas l'utilité
   // @IsString()
   // @IsOptional()
   // city: string;
