@@ -13,13 +13,15 @@ import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
-import { MongooseModule } from './mongoose/mongoose.module';
+import { MongooseModule } from "@nestjs/mongoose";
+import { SchemasModule } from './schemas/schemas.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     PersonModule,
     RoleModule,
     CompanyModule,
@@ -33,7 +35,7 @@ import { MongooseModule } from './mongoose/mongoose.module';
     PrismaModule,
     AuthModule,
     RessourceTypeModule,
-    MongooseModule,
+    SchemasModule,
   ],
 })
 export class AppModule {}
