@@ -1,7 +1,6 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class createStudentDto {
-  
   // peut être pas nécessaire
   // @IsString()
   // @IsNotEmpty()
@@ -23,17 +22,17 @@ export class createStudentDto {
   @IsString()
   @IsNotEmpty()
   phone: string;
- 
+
   // c'est un étudiant donc pas besoin
-  // @IsString() 
+  // @IsString()
   // @IsOptional()
   // type: string;
 
-  @IsString()
-  @IsNotEmpty()
-  company: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // companies: string;
 
-  // je ne vois pas l'utilité 
+  // je ne vois pas l'utilité
   // @IsString()
   // @IsOptional()
   // city: string;

@@ -14,26 +14,26 @@ import { createProspectDto, updateProspectDto } from "../dto/index";
 export class prospectController {
   constructor(private readonly prospectService: ProspectService) {}
 
+  @Post()
+  create(@Body() dto: createProspectDto) {
+    return this.prospectService.create(dto);
+  }
   @Get()
-  getAllProspect() {
-    return this.prospectService.getAllProspect();
+  findAll() {
+    return this.prospectService.findAll();
   }
   @Get("/:id")
-  getProspectById(@Param("id") id: string) {
-    return this.prospectService.getProspectById(id);
-  }
-  @Post()
-  insertProspect(@Body() dto: createProspectDto) {
-    return this.prospectService.insertProspect(dto);
+  findOne(@Param("id") id: string) {
+    return this.prospectService.findOne(id);
   }
 
-  @Patch()
-  updateProspect(@Body() dto: updateProspectDto) {
-    return this.prospectService.updateProspect(dto);
+  @Patch("/:id")
+  update(@Param("id") id: string, @Body() dto: updateProspectDto) {
+    return this.prospectService.update(id, dto);
   }
 
   @Delete("/:id")
-  deleteProspect(@Param("id") id: string) {
-    return this.prospectService.deleteProspect(id);
+  remove(@Param("id") id: string) {
+    return this.prospectService.remove(id);
   }
 }

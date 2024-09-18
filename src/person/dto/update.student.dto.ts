@@ -7,11 +7,6 @@ import {
 } from "class-validator";
 
 export class updateStudentDto {
-  @IsString()
-  @IsUUID()
-  @IsNotEmpty()
-  id: string;
-
   // peut être pas nécessaire
   // @IsString()
   // @IsNotEmpty()

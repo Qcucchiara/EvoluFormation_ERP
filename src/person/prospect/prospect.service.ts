@@ -7,7 +7,7 @@ import { RolePerson } from "src/utils/const";
 export class ProspectService {
   constructor(private prisma: PrismaService) {}
 
-  async insertProspect(dto: createProspectDto) {
+  async create(dto: createProspectDto) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: {
@@ -15,6 +15,7 @@ export class ProspectService {
         },
       });
       if (existingProspect) {
+        //Peut être à modifier la logique
         throw new ForbiddenException("Prospect déja existant");
       }
       const role_id = await this.prisma.role.findUnique({
@@ -47,11 +48,39 @@ export class ProspectService {
       return error;
     }
   }
+  async findAll() {
+    try {
+      const prospectRole = await this.prisma.role.findFirst({
+        where: {
+          name: RolePerson.PROSPECT,
+        },
+      });
+      return await this.prisma.person.findMany({
+        where: { role_id: prospectRole.id },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
 
-  async updateProspect(dto: updateProspectDto) {
+  async findOne(id: string) {
+    try {
+      const existingProspect = await this.prisma.person.findUnique({
+        where: { id: id },
+      });
+      if (existingProspect) {
+        delete existingProspect.role_id;
+        return existingProspect;
+      }
+      throw new ForbiddenException("Prospect non trouver");
+    } catch (error) {
+      return error;
+    }
+  }
+  async update(id: string, dto: updateProspectDto) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
-        where: { id: dto.id },
+        where: { id: id },
       });
       if (!existingProspect || !existingProspect.id) {
         throw new ForbiddenException("Ce prospect n'existe pas");
@@ -74,10 +103,8 @@ export class ProspectService {
           throw new ForbiddenException("Téléphone déja utilisé!");
         }
       }
-
-      delete dto.company;
       await this.prisma.person.update({
-        where: { id: dto.id },
+        where: { id: id },
         data: { ...dto },
       });
 
@@ -86,21 +113,8 @@ export class ProspectService {
       return error;
     }
   }
-  async getAllProspect() {
-    try {
-      const prospectRole = await this.prisma.role.findFirst({
-        where: {
-          name: RolePerson.PROSPECT,
-        },
-      });
-      return await this.prisma.person.findMany({
-        where: { role_id: prospectRole.id },
-      });
-    } catch (error) {
-      return error;
-    }
-  }
-  async deleteProspect(id: string) {
+
+  async remove(id: string) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
         where: { id: id },
@@ -110,20 +124,6 @@ export class ProspectService {
         return { message: "Prospect supprimé", statusCode: 200 };
       }
       throw new ForbiddenException("Prospect non trouvé");
-    } catch (error) {
-      return error;
-    }
-  }
-  async getProspectById(id: string) {
-    try {
-      const existingProspect = await this.prisma.person.findUnique({
-        where: { id: id },
-      });
-      if (existingProspect) {
-        delete existingProspect.role_id;
-        return existingProspect;
-      }
-      throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
       return error;
     }
