@@ -48,7 +48,35 @@ export class ProspectService {
       return error;
     }
   }
+  async findAll() {
+    try {
+      const prospectRole = await this.prisma.role.findFirst({
+        where: {
+          name: RolePerson.PROSPECT,
+        },
+      });
+      return await this.prisma.person.findMany({
+        where: { role_id: prospectRole.id },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
 
+  async findOne(id: string) {
+    try {
+      const existingProspect = await this.prisma.person.findUnique({
+        where: { id: id },
+      });
+      if (existingProspect) {
+        delete existingProspect.role_id;
+        return existingProspect;
+      }
+      throw new ForbiddenException("Prospect non trouver");
+    } catch (error) {
+      return error;
+    }
+  }
   async update(id: string, dto: updateProspectDto) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
@@ -85,20 +113,7 @@ export class ProspectService {
       return error;
     }
   }
-  async findAll() {
-    try {
-      const prospectRole = await this.prisma.role.findFirst({
-        where: {
-          name: RolePerson.PROSPECT,
-        },
-      });
-      return await this.prisma.person.findMany({
-        where: { role_id: prospectRole.id },
-      });
-    } catch (error) {
-      return error;
-    }
-  }
+
   async remove(id: string) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
@@ -109,20 +124,6 @@ export class ProspectService {
         return { message: "Prospect supprimé", statusCode: 200 };
       }
       throw new ForbiddenException("Prospect non trouvé");
-    } catch (error) {
-      return error;
-    }
-  }
-  async findOne(id: string) {
-    try {
-      const existingProspect = await this.prisma.person.findUnique({
-        where: { id: id },
-      });
-      if (existingProspect) {
-        delete existingProspect.role_id;
-        return existingProspect;
-      }
-      throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
       return error;
     }
