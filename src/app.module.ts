@@ -14,14 +14,14 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
 import { MongooseModule } from "@nestjs/mongoose";
-import { SchemasModule } from './schemas/schemas.module';
+import { SchemasModule } from "./schemas/schemas.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URL),
+    // MongooseModule.forRoot(process.env.MONGO_URL),
     PersonModule,
     RoleModule,
     CompanyModule,
