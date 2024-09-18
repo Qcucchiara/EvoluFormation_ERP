@@ -7,7 +7,7 @@ import { RolePerson } from "src/utils/const";
 export class ProspectService {
   constructor(private prisma: PrismaService) {}
 
-  async insertProspect(dto: createProspectDto) {
+  async create(dto: createProspectDto) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: {
@@ -49,7 +49,7 @@ export class ProspectService {
     }
   }
 
-  async updateProspect(id:string,dto: updateProspectDto) {
+  async update(id: string, dto: updateProspectDto) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: { id: id },
@@ -62,7 +62,7 @@ export class ProspectService {
           where: { email: dto.email },
         });
         if (isEmailUsed) {
-          throw new ForbiddenException("Email déja utiliser!");
+          throw new ForbiddenException("Email déja utilisé!");
         }
       }
       if (dto.phone) {
@@ -72,19 +72,20 @@ export class ProspectService {
           },
         });
         if (isPhoneUsed) {
-          throw new ForbiddenException("Téléphone déja utiliser!");
+          throw new ForbiddenException("Téléphone déja utilisé!");
         }
       }
       await this.prisma.person.update({
         where: { id: id },
         data: { ...dto },
       });
-      return { message: "Modification effectuer", statusCode: "200" };
+
+      return { message: "Modification effectuée", statusCode: "200" };
     } catch (error) {
       return error;
     }
   }
-  async getAllProspect() {
+  async findAll() {
     try {
       const prospectRole = await this.prisma.role.findFirst({
         where: {
@@ -98,21 +99,21 @@ export class ProspectService {
       return error;
     }
   }
-  async deleteProspect(id: string) {
+  async remove(id: string) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
         where: { id: id },
       });
       if (existingProspect) {
         await this.prisma.person.delete({ where: { id: id } });
-        return { message: "Prospect supprimer", statusCode: 200 };
+        return { message: "Prospect supprimé", statusCode: 200 };
       }
-      throw new ForbiddenException("Prospect non trouver");
+      throw new ForbiddenException("Prospect non trouvé");
     } catch (error) {
       return error;
     }
   }
-  async getProspectById(id: string) {
+  async findOne(id: string) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
         where: { id: id },

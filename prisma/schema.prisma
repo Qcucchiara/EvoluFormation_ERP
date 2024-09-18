@@ -143,7 +143,7 @@ model Ressource {
 
 model Ressource_type {
   id        String      @id @default(uuid())
-  name      String
+  name      String      @unique
   ressource Ressource[]
 }
 

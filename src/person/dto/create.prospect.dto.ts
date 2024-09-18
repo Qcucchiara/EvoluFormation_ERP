@@ -37,9 +37,11 @@ export class createProspectDto {
   @IsString()
   @IsOptional()
   street: string;
+
   @IsString()
   @IsOptional()
   postal_code: string;
+
   @IsString()
   @IsOptional()
   commentary: string;
