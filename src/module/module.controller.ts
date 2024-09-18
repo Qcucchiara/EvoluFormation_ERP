@@ -1,15 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ModuleService } from './module.service';
-import { CreateModuleDto } from './dto/create-module.dto';
-import { UpdateModuleDto } from './dto/update-module.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from "@nestjs/common";
+import { ModuleService } from "./module.service";
+import { CreateModuleDto } from "./dto/create-module.dto";
+import { UpdateModuleDto } from "./dto/update-module.dto";
 
-@Controller('module')
+@Controller("module")
 export class ModuleController {
   constructor(private readonly moduleService: ModuleService) {}
 
   @Post()
-  create(@Body() createModuleDto: CreateModuleDto) {
-    return this.moduleService.create(createModuleDto);
+  async create(@Body() dto: CreateModuleDto) {
+    return this.moduleService.create(dto);
   }
 
   @Get()
@@ -17,18 +25,18 @@ export class ModuleController {
     return this.moduleService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.moduleService.findOne(+id);
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.moduleService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateModuleDto: UpdateModuleDto) {
-    return this.moduleService.update(+id, updateModuleDto);
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() dto: UpdateModuleDto) {
+    return this.moduleService.update(id, dto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.moduleService.remove(+id);
+  @Delete(":id")
+  remove(@Param("id") id: string) {
+    return this.moduleService.remove(id);
   }
 }

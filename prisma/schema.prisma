@@ -85,10 +85,10 @@ model Module_has_trainer {
 
 model Module {
   id                    String  @id @default(uuid())
-  speciality_bpf_id     String  @unique
-  objective_bpf_id      String  @unique
-  training_objective_id String? @unique
-  title                 String
+  speciality_bpf_id     String
+  objective_bpf_id      String
+  training_objective_id String?
+  title                 String  @unique
   category              String
   amount                String
   duration              String
@@ -106,23 +106,23 @@ model Module {
 }
 
 model Speciality_bpf {
-  id     String  @id @default(uuid())
+  id     String   @id @default(uuid())
   name   String
   number Int
-  module Module?
+  module Module[]
 }
 
 model Objective_bpf {
-  id     String  @id @default(uuid())
+  id     String   @id @default(uuid())
   name   String
   number Int
-  module Module?
+  module Module[]
 }
 
 model Training_objective {
-  id      String  @id @default(uuid())
+  id      String   @id @default(uuid())
   content String
-  module  Module?
+  module  Module[]
 }
 
 model Ressource {

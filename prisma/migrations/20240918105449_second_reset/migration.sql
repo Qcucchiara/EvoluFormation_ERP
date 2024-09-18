@@ -172,13 +172,10 @@ CREATE UNIQUE INDEX "Person_phone_key" ON "Person"("phone");
 CREATE UNIQUE INDEX "Company_siret_key" ON "Company"("siret");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Module_speciality_bpf_id_key" ON "Module"("speciality_bpf_id");
+CREATE UNIQUE INDEX "Module_title_key" ON "Module"("title");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Module_objective_bpf_id_key" ON "Module"("objective_bpf_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Module_training_objective_id_key" ON "Module"("training_objective_id");
+CREATE UNIQUE INDEX "Ressource_type_name_key" ON "Ressource_type"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Comment_category_name_key" ON "Comment_category"("name");
