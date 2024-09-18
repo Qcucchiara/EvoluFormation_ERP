@@ -35,7 +35,7 @@ export class quote {
   price: number;
 
   @Prop()
-  need_analysis: string;
+  needAnalysis: string;
 }
 
 @Schema()
@@ -62,7 +62,13 @@ export class client {
 @Schema()
 export class module {
   @Prop()
-  sessions;
+  sessions: session[];
+}
+
+@Schema()
+export class session {
+  @Prop()
+  convocation;
 }
 
 export const ClientFolderSchema = SchemaFactory.createForClass(clientFolder);

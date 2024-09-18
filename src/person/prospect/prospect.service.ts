@@ -61,7 +61,7 @@ export class ProspectService {
           where: { email: dto.email },
         });
         if (isEmailUsed) {
-          throw new ForbiddenException("Email déja utiliser!");
+          throw new ForbiddenException("Email déja utilisé!");
         }
       }
       if (dto.phone) {
@@ -71,15 +71,17 @@ export class ProspectService {
           },
         });
         if (isPhoneUsed) {
-          throw new ForbiddenException("Téléphone déja utiliser!");
+          throw new ForbiddenException("Téléphone déja utilisé!");
         }
       }
+
       delete dto.company;
       await this.prisma.person.update({
         where: { id: dto.id },
         data: { ...dto },
       });
-      return { message: "Modification effectuer", statusCode: "200" };
+
+      return { message: "Modification effectuée", statusCode: "200" };
     } catch (error) {
       return error;
     }
@@ -105,9 +107,9 @@ export class ProspectService {
       });
       if (existingProspect) {
         await this.prisma.person.delete({ where: { id: id } });
-        return { message: "Prospect supprimer", statusCode: 200 };
+        return { message: "Prospect supprimé", statusCode: 200 };
       }
-      throw new ForbiddenException("Prospect non trouver");
+      throw new ForbiddenException("Prospect non trouvé");
     } catch (error) {
       return error;
     }

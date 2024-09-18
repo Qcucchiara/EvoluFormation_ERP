@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { CreateRessourceTypeDto } from "./dto/create-ressource_type.dto";
 import { UpdateRessourceTypeDto } from "./dto/update-ressource_type.dto";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -8,8 +8,22 @@ import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResp
 export class RessourceTypeService {
   constructor(private prisma: PrismaService) {}
 
-  create(dto: CreateRessourceTypeDto) {
-    return this.prisma.ressource_type.create({ data: { ...dto } });
+  async create(dto: CreateRessourceTypeDto) {
+    try {
+      const ressourceAlredyExist = await this.prisma.ressource_type.findUnique({
+        where: { name: dto.name.toLowerCase() },
+      });
+      if (ressourceAlredyExist) {
+        throw new ForbiddenException("le type de ressource existe déjà.");
+      }
+
+      return this.prisma.ressource_type.create({
+        data: { name: dto.name.toLowerCase(), ...dto },
+      });
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   findAll() {
@@ -17,14 +31,32 @@ export class RessourceTypeService {
   }
 
   findOne(id: string) {
-    return this.prisma.ressource_type.findUnique({ where: { id: id } });
+    try {
+      return this.prisma.ressource_type.findUnique({ where: { id: id } });
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
-  update(id: string, dto: UpdateRessourceTypeDto) {
-    return this.prisma.ressource_type.update({
-      where: { id: id },
-      data: { ...dto },
-    });
+  async update(id: string, dto: UpdateRessourceTypeDto) {
+    try {
+      const ressourceExist = await this.prisma.ressource_type.findUnique({
+        where: { id: id },
+      });
+      if (!ressourceExist) {
+        throw new ForbiddenException(
+          "le type de ressource n'a pas été trouvé.",
+        );
+      }
+      return this.prisma.ressource_type.update({
+        where: { id: id },
+        data: { ...dto },
+      });
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   async remove(id: string) {
