@@ -8,11 +8,6 @@ import {
 
 export class updateProspectDto {
   @IsString()
-  @IsUUID()
-  @IsNotEmpty()
-  id: string;
-
-  @IsString()
   @IsOptional()
   civility: string;
 

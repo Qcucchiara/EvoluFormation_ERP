@@ -8,7 +8,7 @@ import {
   Delete,
 } from "@nestjs/common";
 import { StudentService } from "./student.service";
-import { createStudentDto } from "../dto";
+import { createStudentDto, updateStudentDto } from "../dto";
 
 @Controller("student")
 export class StudentController {
@@ -24,14 +24,14 @@ export class StudentController {
     return this.personService.findAll();
   }
 
-  @Get(":id")
+  @Get("/:id")
   findOne(@Param("id") id: string) {
     return this.personService.findOne(id);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() dto) {
-    return this.personService.update(id);
+  update(@Param("id") id: string, @Body() dto: updateStudentDto) {
+    return this.personService.update(id, dto);
   }
 
   @Delete(":id")

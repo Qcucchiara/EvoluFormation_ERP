@@ -15,6 +15,7 @@ export class ProspectService {
         },
       });
       if (existingProspect) {
+        //Peut être à modifier la logique
         throw new ForbiddenException("Prospect déja existant");
       }
       const role_id = await this.prisma.role.findUnique({
@@ -48,10 +49,10 @@ export class ProspectService {
     }
   }
 
-  async updateProspect(dto: updateProspectDto) {
+  async updateProspect(id:string,dto: updateProspectDto) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
-        where: { id: dto.id },
+        where: { id: id },
       });
       if (!existingProspect || !existingProspect.id) {
         throw new ForbiddenException("Ce prospect n'existe pas");
@@ -74,9 +75,8 @@ export class ProspectService {
           throw new ForbiddenException("Téléphone déja utiliser!");
         }
       }
-      delete dto.company;
       await this.prisma.person.update({
-        where: { id: dto.id },
+        where: { id: id },
         data: { ...dto },
       });
       return { message: "Modification effectuer", statusCode: "200" };

@@ -27,9 +27,9 @@ export class prospectController {
     return this.prospectService.insertProspect(dto);
   }
 
-  @Patch()
-  updateProspect(@Body() dto: updateProspectDto) {
-    return this.prospectService.updateProspect(dto);
+  @Patch("/:id")
+  updateProspect(@Param("id") id:string, @Body() dto: updateProspectDto) {
+    return this.prospectService.updateProspect(id, dto);
   }
 
   @Delete("/:id")
