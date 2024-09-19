@@ -28,6 +28,10 @@ export class prospectController {
   }
 
   @Patch("/:id")
+  toggleBlacklist(@Param("id") id: string) {
+    return this.prospectService.toggleBlacklist(id);
+  }
+  @Patch("/:id")
   update(@Param("id") id: string, @Body() dto: updateProspectDto) {
     return this.prospectService.update(id, dto);
   }

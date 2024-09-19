@@ -26,6 +26,7 @@ model Person {
   first_name         String
   last_name          String
   email              String   @unique
+  is_blacklisted     Boolean  @default(false)
   password           String?
   cities_of_activity String[]
   civility           String?
@@ -42,6 +43,21 @@ model Person {
   modules   Module_has_trainer[]
   Role      Role                  @relation(fields: [role_id], references: [id])
   comments  Comment[]
+  shortcuts Shortcuts[]
+}
+
+model Shortcuts {
+  id        String  @id @default(uuid())
+  person_id String?
+  name      String
+  link      String
+  position  Int
+  icon      String
+  color     String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  Person     Person?  @relation(fields: [person_id], references: [id])
 }
 
 model Company_has_contact {

@@ -113,7 +113,35 @@ export class ProspectService {
       return error;
     }
   }
-
+  async toggleBlacklist(id: string) {
+    try {
+      const existingProspect = await this.prisma.person.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          Role: true,
+        },
+      });
+      if (!existingProspect || !existingProspect.id) {
+        throw new ForbiddenException("Ce prospect n'existe pas");
+      }
+      if (existingProspect.Role.name !== RolePerson.PROSPECT) {
+        throw new ForbiddenException("Ce n'est pas un prospect");
+      }
+      await this.prisma.person.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_blacklisted: !existingProspect.is_blacklisted,
+        },
+      });
+      return { message: "Modification effectuer", statusCode: 200 };
+    } catch (error) {
+      return error;
+    }
+  }
   async remove(id: string) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
