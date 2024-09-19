@@ -11,8 +11,8 @@ export class RoleService {
     return this.prisma.role.create({ data: { ...dto } });
   }
 
-  findAll() {
-    return this.prisma.role.findMany();
+  async findAll() {
+    return await this.prisma.role.findMany();
   }
 
   findOne(id: string) {

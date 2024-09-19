@@ -10,16 +10,15 @@ export class RessourceTypeService {
 
   async create(dto: CreateRessourceTypeDto) {
     try {
-      const ressourceAlredyExist = await this.prisma.ressource_type.findUnique({
-        where: { name: dto.name.toLowerCase() },
-      });
-      if (ressourceAlredyExist) {
-        throw new ForbiddenException("le type de ressource existe déjà.");
-      }
-
-      return this.prisma.ressource_type.create({
-        data: { name: dto.name.toLowerCase(), ...dto },
-      });
+      // // const ressourceAlredyExist = await this.prisma.ressource_type.findUnique({
+      // //   where: { name: dto.name.toLowerCase() },
+      // // });
+      // if (ressourceAlredyExist) {
+      //   throw new ForbiddenException("le type de ressource existe déjà.");
+      // }
+      // return this.prisma.ressource_type.create({
+      //   data: { name: dto.name.toLowerCase(), ...dto },
+      // });
     } catch (error) {
       console.log(error);
       return error;

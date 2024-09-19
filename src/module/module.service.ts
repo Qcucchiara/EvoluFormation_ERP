@@ -9,14 +9,14 @@ export class ModuleService {
 
   async create(dto: CreateModuleDto) {
     try {
-      const isNameExist = await this.prisma.module.findUnique({
-        where: { title: dto.title },
-      });
-      if (!isNameExist) {
-        throw new ForbiddenException(
-          "Un module avec le même titre existe déjà.",
-        );
-      }
+      // const isNameExist = await this.prisma.module.findUnique({
+      //   // where: { title: dto.title },
+      // });
+      // if (!isNameExist) {
+      //   throw new ForbiddenException(
+      //     "Un module avec le même titre existe déjà.",
+      //   );
+      // }
       // await this.prisma.module.create({ data: { ...dto } });
     } catch (error) {
       console.log(error);
