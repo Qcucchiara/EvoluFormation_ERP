@@ -23,17 +23,18 @@ export class CompanyService {
       const companyWithSameName = await this.prisma.company.findFirst({
         where: { name: dto.name },
       });
-      if (companyWithSameName.id) {
+      if (typeof companyWithSameName !== "undefined") {
         throw new ForbiddenException("Nom déjà utilisé");
       }
       if (dto.siret) {
         const companyWithSameSiret = await this.prisma.company.findFirst({
           where: { siret: dto.siret },
         });
-        if (companyWithSameSiret.id) {
+        if (typeof companyWithSameSiret !== "undefined") {
           throw new ForbiddenException("SIRET déjà utilisé");
         }
       }
+
       await this.prisma.company.create({ data: { ...dto } });
       return { message: "entreprise crée avec succès", statusCode: 201 };
     } catch (error) {
