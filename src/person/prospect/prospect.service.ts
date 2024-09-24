@@ -2,12 +2,11 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { createProspectDto, updateProspectDto } from "../dto";
 import { RolePerson } from "src/utils/const";
-
+import { Response } from "express";
 @Injectable()
 export class ProspectService {
   constructor(private prisma: PrismaService) {}
-
-  async create(dto: createProspectDto) {
+  async create(dto: createProspectDto, res: any) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: {
@@ -45,10 +44,12 @@ export class ProspectService {
       });
       return { message: "Prospect crée avec succès", statusCode: 201 };
     } catch (error) {
-      return error;
+      return res
+        .status(error.status)
+        .json({ message: error.message, statusCode: error.status });
     }
   }
-  async findAll() {
+  async findAll(res: Response) {
     try {
       const prospectRole = await this.prisma.role.findFirst({
         where: {
@@ -59,11 +60,11 @@ export class ProspectService {
         where: { role_id: prospectRole.id },
       });
     } catch (error) {
-      return error;
+      return res.status(error.status).json({ message: error.message });
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, res: Response) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
         where: { id: id },
@@ -74,10 +75,10 @@ export class ProspectService {
       }
       throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
-      return error;
+      return res.status(error.status).json({ message: error.message });
     }
   }
-  async update(id: string, dto: updateProspectDto) {
+  async update(id: string, dto: updateProspectDto, res: Response) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: { id: id },
@@ -110,10 +111,10 @@ export class ProspectService {
 
       return { message: "Modification effectuée", statusCode: "200" };
     } catch (error) {
-      return error;
+      return res.status(error.status).json({ message: error.message });
     }
   }
-  async toggleBlacklist(id: string) {
+  async toggleBlacklist(id: string, res: Response) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
         where: {
@@ -139,10 +140,10 @@ export class ProspectService {
       });
       return { message: "Modification effectuer", statusCode: 200 };
     } catch (error) {
-      return error;
+      return res.status(error.status).json({ message: error.message });
     }
   }
-  async remove(id: string) {
+  async remove(id: string, res: Response) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
         where: { id: id },
@@ -153,7 +154,7 @@ export class ProspectService {
       }
       throw new ForbiddenException("Prospect non trouvé");
     } catch (error) {
-      return error;
+      return res.status(error.status).json({ message: error.message });
     }
   }
 }
