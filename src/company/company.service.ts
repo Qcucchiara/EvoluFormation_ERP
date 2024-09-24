@@ -23,18 +23,20 @@ export class CompanyService {
       const companyWithSameName = await this.prisma.company.findFirst({
         where: { name: dto.name },
       });
+
       if (companyWithSameName) {
         throw new ForbiddenException("Nom déjà utilisé");
       }
-      if (dto.siret) {
-        const companyWithSameSiret = await this.prisma.company.findFirst({
-          where: { siret: dto.siret },
-        });
-        if (!companyWithSameSiret || !companyWithSameSiret.id) {
-          await this.prisma.company.create({ data: { ...dto } });
-        }
+
+      const companyWithSameSiret = await this.prisma.company.findFirst({
+        where: { siret: dto.siret },
+      });
+
+      if (companyWithSameSiret !== null) {
         throw new ForbiddenException("SIRET déjà utilisé");
       }
+
+      await this.prisma.company.create({ data: { ...dto } });
 
       return { message: "entreprise crée avec succès", statusCode: 201 };
     } catch (error) {
@@ -103,7 +105,9 @@ export class CompanyService {
         );
       }
 
-      return await this.prisma.company.delete({ where: { id: id } });
+      const res = await this.prisma.company.delete({ where: { id: id } });
+
+      return { message: "Entreprise supprimée avec succès", statusCode: 200 };
     } catch (error) {
       const content = await handleDeleteOnRestrictResponse(
         this.prisma,
