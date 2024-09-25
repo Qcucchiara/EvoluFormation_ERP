@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -14,11 +15,12 @@ import { Response } from "express";
 @Controller("prospect")
 export class prospectController {
   constructor(private readonly prospectService: ProspectService) {}
-  
+
   @Post()
   create(@Body() dto: createProspectDto, @Res() res: Response) {
     return this.prospectService.create(dto, res);
   }
+
   @Get()
   findAll(@Res() res: Response) {
     return this.prospectService.findAll(res);
@@ -29,11 +31,15 @@ export class prospectController {
   }
 
   @Patch("/:id")
-  toggleBlacklist(@Param("id") id: string ,@Res() res: Response) {
+  toggleBlacklist(@Param("id") id: string, @Res() res: Response) {
     return this.prospectService.toggleBlacklist(id, res);
   }
   @Patch("/:id")
-  update(@Param("id") id: string, @Body() dto: updateProspectDto , @Res() res: Response) {
+  update(
+    @Param("id") id: string,
+    @Body() dto: updateProspectDto,
+    @Res() res: Response,
+  ) {
     return this.prospectService.update(id, dto, res);
   }
 

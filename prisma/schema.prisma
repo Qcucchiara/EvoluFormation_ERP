@@ -106,7 +106,7 @@ model Module {
   training_objective_id String?
   title                 String  @unique
   category              String
-  amount                String
+  amount                Float
   duration              String
   website_link          String?
 

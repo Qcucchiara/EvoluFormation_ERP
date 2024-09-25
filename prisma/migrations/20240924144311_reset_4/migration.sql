@@ -14,6 +14,7 @@ CREATE TABLE "Person" (
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "is_blacklisted" BOOLEAN NOT NULL DEFAULT false,
     "password" TEXT,
     "cities_of_activity" TEXT[],
     "civility" TEXT,
@@ -27,6 +28,21 @@ CREATE TABLE "Person" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Person_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Shortcuts" (
+    "id" TEXT NOT NULL,
+    "person_id" TEXT,
+    "name" TEXT NOT NULL,
+    "link" TEXT NOT NULL,
+    "position" INTEGER NOT NULL,
+    "icon" TEXT NOT NULL,
+    "color" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Shortcuts_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -182,6 +198,9 @@ CREATE UNIQUE INDEX "Comment_category_name_key" ON "Comment_category"("name");
 
 -- AddForeignKey
 ALTER TABLE "Person" ADD CONSTRAINT "Person_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Shortcuts" ADD CONSTRAINT "Shortcuts_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "Person"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Company_has_contact" ADD CONSTRAINT "Company_has_contact_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "Person"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

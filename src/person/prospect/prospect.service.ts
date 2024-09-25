@@ -6,7 +6,7 @@ import { Response } from "express";
 @Injectable()
 export class ProspectService {
   constructor(private prisma: PrismaService) {}
-  async create(dto: createProspectDto, res: any) {
+  async create(dto: createProspectDto, res: Response) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: {
@@ -44,6 +44,7 @@ export class ProspectService {
       });
       return { message: "Prospect crée avec succès", statusCode: 201 };
     } catch (error) {
+      console.log("test");
       return res
         .status(error.status)
         .json({ message: error.message, statusCode: error.status });
@@ -56,9 +57,11 @@ export class ProspectService {
           name: RolePerson.PROSPECT,
         },
       });
-      return await this.prisma.person.findMany({
+      const response = await this.prisma.person.findMany({
         where: { role_id: prospectRole.id },
       });
+
+      return res.status(res.statusCode).json({ message: response });
     } catch (error) {
       return res.status(error.status).json({ message: error.message });
     }

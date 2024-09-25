@@ -1,5 +1,6 @@
 import {
   IsNumber,
+  IsNumberString,
   IsOptional,
   IsString,
   IsUrl,
@@ -20,15 +21,17 @@ export class UpdateModuleDto {
   @IsOptional()
   amount: number;
 
-  @IsNumber()
+  @IsNumberString()
   @IsOptional()
-  duration: number;
+  duration: string;
 
   @IsUUID()
+  @IsString()
   @IsOptional()
   speciality_bpf_id: string;
 
   @IsUUID()
+  @IsString()
   @IsOptional()
   objective_bpf_id: string;
 
