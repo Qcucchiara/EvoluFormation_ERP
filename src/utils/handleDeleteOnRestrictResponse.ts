@@ -3,7 +3,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 /**
  *
  * @param prisma > import prisma
- * @param entityId > primary kay of the entry
+ * @param entityId > primary key of the entry
  * @param nameFK > name of the foreign keys without the "_id" suffix
  * @param listRelationModels > name of the method of each models
  * @param safeMode > if yes, return an array, if no, throw an error with the array.
@@ -32,13 +32,13 @@ export default async function handleDeleteOnRestrictResponse(
     }
   }
 
-  if (!safeMode) {
-    throw new ConflictException({
-      message:
-        "des conflits avec d'autres tableaux ont été trouvés. \n" +
-        "Veuillez corriger les contraintes avant de recommencer.",
-      content: res,
-    });
-  }
-  return res;
+  // if (!safeMode) {
+  //   throw new ConflictException({
+  //     message:
+  //       "des conflits avec d'autres tableaux ont été trouvés. \n" +
+  //       "Veuillez corriger les contraintes avant de recommencer.",
+  //     content: res,
+  //   });
+  // }
+  return { res };
 }

@@ -46,7 +46,6 @@ export class ProspectService {
         .status(res.statusCode)
         .json({ message: "Prospect crée avec succès", statusCode: 201 });
     } catch (error) {
-      console.log(error);
       return res
         .status(error.status)
         .json({ message: error.message, statusCode: error.status });
@@ -59,14 +58,10 @@ export class ProspectService {
           name: RolePerson.PROSPECT,
         },
       });
-      const allProspect = await this.prisma.person.findMany({
+      const response = await this.prisma.person.findMany({
         where: { role_id: prospectRole.id },
       });
-      const data = {
-        response: allProspect,
-        statusCode: 200,
-      };
-      return res.status(res.statusCode).json(data);
+      return res.status(res.statusCode).json({ message: response });
     } catch (error) {
       return res
         .status(error.status)
@@ -85,13 +80,10 @@ export class ProspectService {
       }
       throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
-      return res
-        .status(error.status)
-        .json({ message: error.message, statusCode: error.status });
+      return res.status(error.status).json({ message: error.message });
     }
   }
   async update(id: string, dto: updateProspectDto, res: Response) {
-    console.log("test");
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: { id: id },
@@ -117,12 +109,10 @@ export class ProspectService {
           throw new ForbiddenException("Téléphone déja utilisé!");
         }
       }
-      console.log("la");
       await this.prisma.person.update({
         where: { id: id },
         data: { ...dto },
       });
-      console.log("ici");
       return res
         .status(res.statusCode)
         .json({ message: "Modification effectuée" });
@@ -130,7 +120,7 @@ export class ProspectService {
       console.log(error);
       return res
         .status(error.status)
-        .json({ message: error.message, statusCode: error.status });
+        .json({ message: error.message });
     }
   }
   async toggleBlacklist(id: string, res: Response) {

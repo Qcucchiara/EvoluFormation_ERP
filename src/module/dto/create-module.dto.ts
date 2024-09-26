@@ -1,6 +1,7 @@
 import {
   IsNotEmpty,
   IsNumber,
+  IsNumberString,
   IsOptional,
   IsString,
   IsUrl,
@@ -21,16 +22,18 @@ export class CreateModuleDto {
   @IsNotEmpty()
   amount: number;
 
-  @IsNumber()
+  @IsNumberString()
   @IsNotEmpty()
-  duration: number;
+  duration: string;
 
   @IsUUID()
-  @IsNotEmpty()
+  @IsString()
+  @IsOptional() // TODO: a changer pour un @IsNotEmpty()
   speciality_bpf_id: string;
 
   @IsUUID()
-  @IsNotEmpty()
+  @IsString()
+  @IsOptional() // TODO: a changer pour un @IsNotEmpty()
   objective_bpf_id: string;
 
   @IsString()
@@ -38,10 +41,13 @@ export class CreateModuleDto {
   training_objective: string;
 
   @IsUUID()
+  @IsString()
+  @IsOptional()
   @ValidateIf((e) => !e.training_objective)
   training_objective_id: string;
 
   @IsUrl()
+  @IsString()
   @IsOptional()
   website_link: string;
 }
