@@ -28,12 +28,12 @@ export class CreateModuleDto {
 
   @IsUUID()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional() // TODO: a changer pour un @IsNotEmpty()
   speciality_bpf_id: string;
 
   @IsUUID()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional() // TODO: a changer pour un @IsNotEmpty()
   objective_bpf_id: string;
 
   @IsString()
