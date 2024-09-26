@@ -6,7 +6,7 @@ import { Response } from "express";
 @Injectable()
 export class ProspectService {
   constructor(private prisma: PrismaService) {}
-  async create(dto: createProspectDto, res: any) {
+  async create(dto: createProspectDto, res: Response) {
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: {
@@ -42,8 +42,11 @@ export class ProspectService {
           role_id: role_id.id,
         },
       });
-      return { message: "Prospect crée avec succès", statusCode: 201 };
+      return res
+        .status(res.statusCode)
+        .json({ message: "Prospect crée avec succès", statusCode: 201 });
     } catch (error) {
+      console.log(error);
       return res
         .status(error.status)
         .json({ message: error.message, statusCode: error.status });
@@ -56,11 +59,18 @@ export class ProspectService {
           name: RolePerson.PROSPECT,
         },
       });
-      return await this.prisma.person.findMany({
+      const allProspect = await this.prisma.person.findMany({
         where: { role_id: prospectRole.id },
       });
+      const data = {
+        response: allProspect,
+        statusCode: 200,
+      };
+      return res.status(res.statusCode).json(data);
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      return res
+        .status(error.status)
+        .json({ message: error.message, statusCode: error.status });
     }
   }
 
@@ -71,14 +81,17 @@ export class ProspectService {
       });
       if (existingProspect) {
         delete existingProspect.role_id;
-        return existingProspect;
+        return res.status(res.statusCode).json(existingProspect);
       }
       throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      return res
+        .status(error.status)
+        .json({ message: error.message, statusCode: error.status });
     }
   }
   async update(id: string, dto: updateProspectDto, res: Response) {
+    console.log("test");
     try {
       const existingProspect = await this.prisma.person.findFirst({
         where: { id: id },
@@ -104,14 +117,20 @@ export class ProspectService {
           throw new ForbiddenException("Téléphone déja utilisé!");
         }
       }
+      console.log("la");
       await this.prisma.person.update({
         where: { id: id },
         data: { ...dto },
       });
-
-      return { message: "Modification effectuée", statusCode: "200" };
+      console.log("ici");
+      return res
+        .status(res.statusCode)
+        .json({ message: "Modification effectuée" });
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      console.log(error);
+      return res
+        .status(error.status)
+        .json({ message: error.message, statusCode: error.status });
     }
   }
   async toggleBlacklist(id: string, res: Response) {
