@@ -42,9 +42,10 @@ export class ProspectService {
           role_id: role_id.id,
         },
       });
-      return { message: "Prospect crée avec succès", statusCode: 201 };
+      return res
+        .status(res.statusCode)
+        .json({ message: "Prospect crée avec succès", statusCode: 201 });
     } catch (error) {
-      console.log("test");
       return res
         .status(error.status)
         .json({ message: error.message, statusCode: error.status });
@@ -60,10 +61,11 @@ export class ProspectService {
       const response = await this.prisma.person.findMany({
         where: { role_id: prospectRole.id },
       });
-
       return res.status(res.statusCode).json({ message: response });
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      return res
+        .status(error.status)
+        .json({ message: error.message, statusCode: error.status });
     }
   }
 
@@ -74,7 +76,7 @@ export class ProspectService {
       });
       if (existingProspect) {
         delete existingProspect.role_id;
-        return existingProspect;
+        return res.status(res.statusCode).json(existingProspect);
       }
       throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
@@ -111,10 +113,14 @@ export class ProspectService {
         where: { id: id },
         data: { ...dto },
       });
-
-      return { message: "Modification effectuée", statusCode: "200" };
+      return res
+        .status(res.statusCode)
+        .json({ message: "Modification effectuée" });
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      console.log(error);
+      return res
+        .status(error.status)
+        .json({ message: error.message });
     }
   }
   async toggleBlacklist(id: string, res: Response) {

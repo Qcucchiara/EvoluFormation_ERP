@@ -37,6 +37,7 @@ export class CreateModuleDto {
   objective_bpf_id: string;
 
   @IsString()
+  @IsOptional()
   @ValidateIf((e) => !e.training_objective_id)
   training_objective: string;
 

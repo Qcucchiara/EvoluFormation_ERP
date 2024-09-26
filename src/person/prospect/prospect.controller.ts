@@ -30,7 +30,7 @@ export class prospectController {
     return this.prospectService.findOne(id, res);
   }
 
-  @Patch("/:id")
+  @Patch("/blacklist/:id")
   toggleBlacklist(@Param("id") id: string, @Res() res: Response) {
     return this.prospectService.toggleBlacklist(id, res);
   }
