@@ -20,6 +20,8 @@ export class ModuleService {
         );
       }
       console.log(dto);
+
+      // TODO: rajouter le nom des catégories BPF directement dans la table module
       const data = await this.prisma.module.create({ data: { ...dto } });
       return res.status(res.statusCode).json({
         status: res.statusCode,

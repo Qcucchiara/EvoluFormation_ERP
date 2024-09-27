@@ -101,8 +101,8 @@ model Module_has_trainer {
 
 model Module {
   id                    String  @id @default(uuid())
-  speciality_bpf_id     String
-  objective_bpf_id      String
+  speciality_bpf_id     String?
+  objective_bpf_id      String?
   training_objective_id String?
   title                 String  @unique
   category              String
@@ -114,8 +114,8 @@ model Module {
   updated_at DateTime @updatedAt
 
   trainers           Module_has_trainer[]
-  Speciality_bpf     Speciality_bpf       @relation(fields: [speciality_bpf_id], references: [id])
-  Objective_bpf      Objective_bpf        @relation(fields: [objective_bpf_id], references: [id])
+  Speciality_bpf     Speciality_bpf?      @relation(fields: [speciality_bpf_id], references: [id])
+  Objective_bpf      Objective_bpf?       @relation(fields: [objective_bpf_id], references: [id])
   Training_objective Training_objective?  @relation(fields: [training_objective_id], references: [id])
 
   comments Comment[]
