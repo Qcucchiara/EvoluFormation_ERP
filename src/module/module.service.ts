@@ -20,7 +20,9 @@ export class ModuleService {
         );
       }
       console.log(dto);
-      const data = await this.prisma.module.create({ data: { ...dto } });
+      const data = await this.prisma.module.create({
+        data: { ...dto, speciality_bpf_id: dto.speciality_bpf_id },
+      });
       return res.status(res.statusCode).json({
         status: res.statusCode,
         success: true,

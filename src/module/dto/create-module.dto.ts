@@ -22,7 +22,7 @@ export class CreateModuleDto {
   @IsNotEmpty()
   amount: number;
 
-  @IsNumberString()
+  @IsString()
   @IsNotEmpty()
   duration: string;
 
