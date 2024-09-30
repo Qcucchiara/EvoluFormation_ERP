@@ -117,10 +117,9 @@ export class ProspectService {
         .status(res.statusCode)
         .json({ message: "Modification effectuée" });
     } catch (error) {
-      console.log(error);
-      return res
-        .status(error.status)
-        .json({ message: error.message });
+      console.log("ERROR: " + error.message);
+
+      return res.status(error.status).json({ message: error.message });
     }
   }
   async toggleBlacklist(id: string, res: Response) {
