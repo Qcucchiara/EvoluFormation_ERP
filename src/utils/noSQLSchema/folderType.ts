@@ -56,7 +56,7 @@ export type Trainer = {
 };
 
 export type Trainee = {
-  traineeData: unknown; //TODO: chercher comment gérer un type unknown dans mongoose
+  traineeId: string; //TODO: chercher comment gérer un type unknown dans mongoose
   trainingCertificate: DocumentInFolder;
   skillsAssessment: DocumentInFolder;
   placementTest: DocumentInFolder;
