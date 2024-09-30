@@ -20,7 +20,8 @@ export class RessourceTypeService {
       //   data: { name: dto.name.toLowerCase(), ...dto },
       // });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }
@@ -33,7 +34,8 @@ export class RessourceTypeService {
     try {
       return this.prisma.ressource_type.findUnique({ where: { id: id } });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }
@@ -53,7 +55,8 @@ export class RessourceTypeService {
         data: { ...dto },
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }

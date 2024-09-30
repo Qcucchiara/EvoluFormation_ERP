@@ -36,7 +36,8 @@ export class TrainerService {
         },
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }
@@ -52,7 +53,8 @@ export class TrainerService {
         where: { role_id: trainerRole.id },
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }
@@ -68,7 +70,8 @@ export class TrainerService {
       }
       throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }
@@ -104,7 +107,8 @@ export class TrainerService {
 
       return { message: "Modification effectuée", statusCode: "200" };
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }
@@ -120,7 +124,8 @@ export class TrainerService {
       }
       throw new ForbiddenException("Formateur non trouvé");
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }

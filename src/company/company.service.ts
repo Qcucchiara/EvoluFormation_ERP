@@ -46,7 +46,8 @@ export class CompanyService {
         // data: data,
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return res.status(error.status).json({
         status: error.status,
         success: false,
@@ -60,7 +61,8 @@ export class CompanyService {
     try {
       return await this.prisma.company.findMany();
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }
@@ -70,7 +72,8 @@ export class CompanyService {
       // TODO: Chercher les dossiers associés à l'entreprise
       return this.prisma.company.findUnique({ where: { id: id } });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return error;
     }
   }
@@ -105,7 +108,8 @@ export class CompanyService {
         data: updatedCompany,
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       return res.status(error.status).json({
         status: error.status,
         success: false,
@@ -136,7 +140,8 @@ export class CompanyService {
         data: data,
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       const content = await handleDeleteOnRestrictResponse(
         this.prisma,
         id,

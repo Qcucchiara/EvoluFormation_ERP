@@ -15,13 +15,12 @@ export class ModuleService {
         where: { title: dto.title },
       });
       if (isNameExist) {
-        throw new ForbiddenException(
-          "Un module avec le même titre existe déjà.",
-        );
+        throw new ForbiddenException("Le titre existe déjà.");
       }
       console.log(dto);
 
       // TODO: rajouter le nom des catégories BPF directement dans la table module
+      dto.duration = dto.duration + "";
       const data = await this.prisma.module.create({ data: { ...dto } });
       return res.status(res.statusCode).json({
         status: res.statusCode,
@@ -30,7 +29,7 @@ export class ModuleService {
         // data: data,
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
       return res.status(error.status).json({
         status: error.status,
         success: false,
@@ -50,7 +49,8 @@ export class ModuleService {
         data: data,
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       res.status(error.status).json({
         status: error.status,
         success: false,
@@ -75,7 +75,8 @@ export class ModuleService {
         data: findModule,
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       res.status(error.status).json({
         status: error.status,
         success: false,
@@ -115,7 +116,8 @@ export class ModuleService {
         data: updatedModule,
       });
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       res.status(error.status).json({
         status: error.status,
         success: false,
@@ -141,7 +143,8 @@ export class ModuleService {
         "module",
         ["module_has_trainer", "comment"],
       );
-      console.log(error);
+      console.log("ERROR: " + error.message);
+
       res.status(error.status).json({
         status: error.status,
         success: false,
