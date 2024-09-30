@@ -17,7 +17,6 @@ export class ModuleService {
       if (isNameExist) {
         throw new ForbiddenException("Le titre existe déjà.");
       }
-      console.log(dto);
 
       // TODO: rajouter le nom des catégories BPF directement dans la table module
       dto.duration = dto.duration + "";
