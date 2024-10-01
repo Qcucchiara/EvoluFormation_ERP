@@ -13,6 +13,10 @@ export class updateProspectDto {
 
   @IsString()
   @IsOptional()
+  status: string;
+
+  @IsString()
+  @IsOptional()
   first_name: string;
 
   @IsString()

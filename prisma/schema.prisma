@@ -36,6 +36,7 @@ model Person {
   city               String?
   street             String?
   postal_code        String?
+  status             String?  @default("En attente")
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 

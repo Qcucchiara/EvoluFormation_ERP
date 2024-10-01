@@ -14,6 +14,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
 import { MongooseModule } from "@nestjs/mongoose";
+import { ClientFolderModule } from "./client-folder/client-folder.module";
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MongooseModule } from "@nestjs/mongoose";
     MongooseModule.forRoot(process.env.MONGO_URL, {
       dbName: process.env.MONGO_DATABASE,
     }),
+    ClientFolderModule,
     PersonModule,
     RoleModule,
     CompanyModule,
