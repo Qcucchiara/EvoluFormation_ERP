@@ -20,9 +20,9 @@ import { MongooseModule } from "@nestjs/mongoose";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // MongooseModule.forRoot(process.env.MONGO_URL, {
-    //   dbName: process.env.MONGO_DATABASE,
-    // }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      dbName: process.env.MONGO_DATABASE,
+    }),
     PersonModule,
     RoleModule,
     CompanyModule,

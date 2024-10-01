@@ -16,19 +16,27 @@
 //   needAnalysis: string;
 // };
 
-import { Prop, Schema } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import {
   DocumentInFolder,
-  FundingType,
-  Module,
-} from "src/utils/noSQLSchema/FolderType";
+  DocumentInFolderSchema,
+} from "./DocumentInFolder.schema";
+import { Module, ModuleSchema } from "./Module.schema";
+import { FundingType } from "src/utils/noSQLSchema/FolderType";
 
 @Schema()
 export class Quote {
-  @Prop()
+  @Prop({ type: DocumentInFolderSchema })
   quoteFile: DocumentInFolder;
 
-  @Prop()
+  @Prop({
+    type: {
+      fundingType: { type: String, enum: FundingType },
+      clientId: String,
+      modules: ModuleSchema,
+      invoice: DocumentInFolderSchema,
+    },
+  })
   trainingAgreement: {
     fundingType: FundingType;
     clientId: string;
@@ -42,3 +50,5 @@ export class Quote {
   @Prop()
   needAnalysis: string;
 }
+
+export const QuoteSchema = SchemaFactory.createForClass(Quote);
