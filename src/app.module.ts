@@ -16,6 +16,9 @@ import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ClientFolderModule } from "./client-folder/client-folder.module";
 
+console.log(process.env.MONGO_DATABASE);
+console.log(process.env.MONGO_URL);
+
 @Module({
   imports: [
     ConfigModule.forRoot({
