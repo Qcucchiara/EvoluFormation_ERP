@@ -7,6 +7,8 @@
 // };
 
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Trainee } from "./Trainee.schema";
+import { Trainer } from "./Trainer.schema";
 
 @Schema()
 export class ClientFolder {
@@ -21,10 +23,10 @@ export class ClientFolder {
 
   @Prop()
   // TODO: demander si ça a un intérêt de lister les formateurs qui ont été commisionnés par chaque client
-  pastTrainers: Trainer[];
+  pastTrainers: Trainer;
 
   @Prop()
-  pastTrainees: Trainee[];
+  pastTrainees: Trainee;
 }
 
 export const ClientFolderSchema = SchemaFactory.createForClass(ClientFolder);
