@@ -5,8 +5,9 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from "@nestjs/common";
-import { CreateCompanyDto } from "./dto/create-company.dto";
+import { CreateCompanyDto, LinkToPersonDTO } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
@@ -43,6 +44,43 @@ export class CompanyService {
         status: res.statusCode,
         success: true,
         message: "Entreprise créé avec succès",
+        // data: data,
+      });
+    } catch (error) {
+      console.log("ERROR: " + error.message);
+
+      return res.status(error.status).json({
+        status: error.status,
+        success: false,
+        message: error.message,
+        // error: { error: "Database connection error" },
+      });
+    }
+  }
+
+  async linkToPerson(dto: LinkToPersonDTO, res: Response) {
+    try {
+      const company = await this.prisma.company.findUnique({
+        where: { id: dto.company_id },
+      });
+      const person = await this.prisma.person.findUnique({
+        where: { id: dto.person_id },
+      });
+      if (!company || !person) {
+        throw new UnauthorizedException("Une des entrées n'existe pas");
+      }
+      const data = await this.prisma.company_has_person.create({
+        data: { ...dto },
+      });
+
+      if (!data) {
+        throw new ForbiddenException("La relation n'a pas été crée");
+      }
+
+      return res.status(res.statusCode).json({
+        status: res.statusCode,
+        success: true,
+        message: "Relation créée avec succès",
         // data: data,
       });
     } catch (error) {

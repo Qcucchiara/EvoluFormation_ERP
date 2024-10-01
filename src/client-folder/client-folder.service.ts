@@ -18,7 +18,7 @@ export class ClientFolderService {
     return newFolder.save();
   }
 
-  findAll() {
+  async findAll() {
     return this.clientFolder.find().exec();
   }
 

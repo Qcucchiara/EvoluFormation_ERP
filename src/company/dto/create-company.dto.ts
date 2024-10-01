@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  IsUUID,
 } from "class-validator";
 
 export class CreateCompanyDto {
@@ -30,4 +31,18 @@ export class CreateCompanyDto {
   @IsOptional()
   @IsUrl()
   website_link: string;
+}
+
+export class LinkToPersonDTO {
+  @IsNotEmpty()
+  @IsUUID()
+  company_id: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  person_id: string;
+
+  @IsOptional()
+  @IsString()
+  quality: string;
 }

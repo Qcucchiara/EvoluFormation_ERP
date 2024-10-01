@@ -36,12 +36,13 @@ model Person {
   city               String?
   street             String?
   postal_code        String?
+  note               String?
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
-  companies Company_has_contact[]
+  companies Company_has_person[]
   modules   Module_has_trainer[]
-  Role      Role                  @relation(fields: [role_id], references: [id])
+  Role      Role                 @relation(fields: [role_id], references: [id])
   comments  Comment[]
   shortcuts Shortcuts[]
 }
@@ -60,7 +61,7 @@ model Shortcuts {
   Person     Person?  @relation(fields: [person_id], references: [id])
 }
 
-model Company_has_contact {
+model Company_has_person {
   id         String  @id @default(uuid())
   company_id String
   person_id  String
@@ -84,7 +85,7 @@ model Company {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  contact  Company_has_contact[]
+  contact  Company_has_person[]
   comments Comment[]
 }
 

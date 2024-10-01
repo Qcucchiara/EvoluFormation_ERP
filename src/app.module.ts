@@ -15,6 +15,9 @@ import { AuthModule } from "./auth/auth.module";
 import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
 import { MongooseModule } from "@nestjs/mongoose";
 
+console.log(process.env.MONGO_DATABASE);
+console.log(process.env.MONGO_URL);
+
 @Module({
   imports: [
     ConfigModule.forRoot({

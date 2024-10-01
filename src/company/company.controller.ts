@@ -9,7 +9,7 @@ import {
   Res,
 } from "@nestjs/common";
 import { CompanyService } from "./company.service";
-import { CreateCompanyDto } from "./dto/create-company.dto";
+import { CreateCompanyDto, LinkToPersonDTO } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { Response } from "express";
 
@@ -20,6 +20,11 @@ export class CompanyController {
   @Post()
   create(@Body() createCompanyDto: CreateCompanyDto, @Res() res: Response) {
     return this.companyService.create(createCompanyDto, res);
+  }
+
+  @Post()
+  LinkToPerson(dto: LinkToPersonDTO, @Res() res: Response) {
+    return this.companyService.linkToPerson(dto, res);
   }
 
   @Get()
