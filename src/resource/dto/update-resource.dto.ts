@@ -1,28 +1,27 @@
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator"
+import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateResourceDto {
-
   @IsOptional()
   @IsString()
-  name: string
+  name: string;
 
   @IsOptional()
   @IsNumber()
-  price: number
+  price: number;
 
   @IsOptional()
   @IsString()
-  adress: string
+  adress: string;
 
   @IsOptional()
   @IsString()
-  postal_code: string
+  postal_code: string;
 
   @IsOptional()
   @IsString()
-  ciy: string
+  ciy: string;
 
   @IsOptional()
   @IsDate()
-  acquisition_date: string
+  acquisition_date: string;
 }

@@ -40,5 +40,5 @@ export default async function handleDeleteOnRestrictResponse(
   //     content: res,
   //   });
   // }
-  return { res };
+  return res;
 }
