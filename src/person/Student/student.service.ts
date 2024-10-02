@@ -73,7 +73,7 @@ export class StudentService {
         const isEmailUsed = await this.prisma.person.findFirst({
           where: { email: dto.email },
         });
-        if (isEmailUsed) {
+        if (isEmailUsed && isEmailUsed.email !== existingStudent.email) {
           throw new ForbiddenException("Email déja utiliser!");
         }
       }
