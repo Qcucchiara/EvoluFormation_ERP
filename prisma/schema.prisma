@@ -147,6 +147,7 @@ model Ressource {
   id               String  @id @default(uuid())
   name             String
   type_id          String
+  type_name        String?
   price            Float
   adress           String?
   postal_code      String?
