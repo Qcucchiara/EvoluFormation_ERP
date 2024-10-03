@@ -4,6 +4,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import * as argon from "argon2";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
+import { RolePerson } from "src/utils/const";
 
 @Injectable()
 export class AuthService {
@@ -35,18 +36,27 @@ export class AuthService {
   // }
 
   async signin(dto) {
+    const roleTrainer = await this.prisma.role.findUnique({
+      where: { name: RolePerson.TRAINER },
+    });
+
+    const roleAdmin = await this.prisma.role.findUnique({
+      where: { name: RolePerson.ADMIN },
+    });
+
     const user = await this.prisma.person.findUnique({
       where: {
         email: dto.email,
+        OR: [{ role_id: roleTrainer.id }, { role_id: roleAdmin.id }],
       },
     });
     if (!user) {
-      throw new ForbiddenException("Invalid crendentials");
+      throw new ForbiddenException("Identifiants incorrects");
     }
 
     const isValidPassword = await argon.verify(user.password, dto.password);
     if (!isValidPassword) {
-      throw new ForbiddenException("Invalid crendentials");
+      throw new ForbiddenException("Identifiants incorrects");
     }
     return this.signToken(user.id);
   }
@@ -58,12 +68,12 @@ export class AuthService {
 
     const secret = this.config.get("JWT_SECRET");
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: "30d",
+      expiresIn: "1d",
       secret: secret,
     });
 
     return {
       access_token: token,
     };
-  }
+  } //TODO: faire le truc avec express et "res"
 }

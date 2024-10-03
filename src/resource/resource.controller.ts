@@ -7,11 +7,14 @@ import {
   Param,
   Delete,
   Res,
+  UseGuards,
 } from "@nestjs/common";
 import { ResourceService } from "./resource.service";
 import { CreateResourceDto, UpdateResourceDto } from "./dto";
 import { Response } from "express";
+import { JwtGuard } from "src/auth/guards";
 
+@UseGuards(JwtGuard)
 @Controller("resource")
 export class ResourceController {
   constructor(private readonly resourceService: ResourceService) {}

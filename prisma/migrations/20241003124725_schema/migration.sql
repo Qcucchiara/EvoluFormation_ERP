@@ -2,7 +2,7 @@
 CREATE TABLE "Role" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "quality" TEXT NOT NULL,
+    "quality" TEXT,
 
     CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
 );
@@ -24,6 +24,8 @@ CREATE TABLE "Person" (
     "city" TEXT,
     "street" TEXT,
     "postal_code" TEXT,
+    "note" TEXT,
+    "status" TEXT DEFAULT 'En attente',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -46,7 +48,7 @@ CREATE TABLE "Shortcuts" (
 );
 
 -- CreateTable
-CREATE TABLE "Company_has_contact" (
+CREATE TABLE "Company_has_person" (
     "id" TEXT NOT NULL,
     "company_id" TEXT NOT NULL,
     "person_id" TEXT NOT NULL,
@@ -54,7 +56,7 @@ CREATE TABLE "Company_has_contact" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Company_has_contact_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Company_has_person_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -86,12 +88,12 @@ CREATE TABLE "Module_has_trainer" (
 -- CreateTable
 CREATE TABLE "Module" (
     "id" TEXT NOT NULL,
-    "speciality_bpf_id" TEXT NOT NULL,
-    "objective_bpf_id" TEXT NOT NULL,
+    "speciality_bpf_id" TEXT,
+    "objective_bpf_id" TEXT,
     "training_objective_id" TEXT,
     "title" TEXT NOT NULL,
     "category" TEXT NOT NULL,
-    "amount" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
     "duration" TEXT NOT NULL,
     "website_link" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -131,6 +133,7 @@ CREATE TABLE "Ressource" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "type_id" TEXT NOT NULL,
+    "type_name" TEXT,
     "price" DOUBLE PRECISION NOT NULL,
     "adress" TEXT,
     "postal_code" TEXT,
@@ -146,6 +149,7 @@ CREATE TABLE "Ressource" (
 CREATE TABLE "Ressource_type" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
 
     CONSTRAINT "Ressource_type_pkey" PRIMARY KEY ("id")
 );
@@ -194,6 +198,9 @@ CREATE UNIQUE INDEX "Module_title_key" ON "Module"("title");
 CREATE UNIQUE INDEX "Ressource_type_name_key" ON "Ressource_type"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Ressource_type_slug_key" ON "Ressource_type"("slug");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Comment_category_name_key" ON "Comment_category"("name");
 
 -- AddForeignKey
@@ -203,10 +210,10 @@ ALTER TABLE "Person" ADD CONSTRAINT "Person_role_id_fkey" FOREIGN KEY ("role_id"
 ALTER TABLE "Shortcuts" ADD CONSTRAINT "Shortcuts_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "Person"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Company_has_contact" ADD CONSTRAINT "Company_has_contact_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "Person"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Company_has_person" ADD CONSTRAINT "Company_has_person_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "Person"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Company_has_contact" ADD CONSTRAINT "Company_has_contact_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Company_has_person" ADD CONSTRAINT "Company_has_person_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Module_has_trainer" ADD CONSTRAINT "Module_has_trainer_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "Person"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -215,10 +222,10 @@ ALTER TABLE "Module_has_trainer" ADD CONSTRAINT "Module_has_trainer_person_id_fk
 ALTER TABLE "Module_has_trainer" ADD CONSTRAINT "Module_has_trainer_module_id_fkey" FOREIGN KEY ("module_id") REFERENCES "Module"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Module" ADD CONSTRAINT "Module_speciality_bpf_id_fkey" FOREIGN KEY ("speciality_bpf_id") REFERENCES "Speciality_bpf"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Module" ADD CONSTRAINT "Module_speciality_bpf_id_fkey" FOREIGN KEY ("speciality_bpf_id") REFERENCES "Speciality_bpf"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Module" ADD CONSTRAINT "Module_objective_bpf_id_fkey" FOREIGN KEY ("objective_bpf_id") REFERENCES "Objective_bpf"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Module" ADD CONSTRAINT "Module_objective_bpf_id_fkey" FOREIGN KEY ("objective_bpf_id") REFERENCES "Objective_bpf"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Module" ADD CONSTRAINT "Module_training_objective_id_fkey" FOREIGN KEY ("training_objective_id") REFERENCES "Training_objective"("id") ON DELETE SET NULL ON UPDATE CASCADE;

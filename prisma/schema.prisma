@@ -16,7 +16,7 @@ datasource db {
 model Role {
   id      String   @id @default(uuid())
   name    String   @unique
-  quality String
+  quality String?
   person  Person[]
 }
 

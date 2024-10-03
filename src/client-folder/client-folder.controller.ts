@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { ClientFolderService } from "./client-folder.service";
 import { CreateClientFolderDto } from "./dto/create-client-folder.dto";
 import { UpdateClientFolderDto } from "./dto/update-client-folder.dto";
+import { JwtGuard } from "src/auth/guards";
 
+@UseGuards(JwtGuard)
 @Controller("client-folder")
 export class ClientFolderController {
   constructor(private readonly clientFolderService: ClientFolderService) {}
