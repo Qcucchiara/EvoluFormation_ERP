@@ -3,12 +3,13 @@ import { createTrainerDTO } from "../dto/create-trainer.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RolePerson } from "src/utils/const";
 import { updateTrainerDTO } from "../dto/update-trainer.dto";
+import { Response } from "express";
 
 @Injectable()
 export class TrainerService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: createTrainerDTO) {
+  async create(dto: createTrainerDTO, res: Response) {
     try {
       const existingTrainer = await this.prisma.person.findFirst({
         where: {
@@ -26,7 +27,7 @@ export class TrainerService {
         throw new ForbiddenException("role non trouvé");
       }
       // TODO: Créer une entrée dans la table Module_has_trainer pour chaque module_id de l'array module_ids
-      return this.prisma.person.create({
+      const data = await this.prisma.person.create({
         data: {
           first_name: dto.first_name,
           last_name: dto.last_name,
@@ -35,10 +36,21 @@ export class TrainerService {
           role_id: trainerRole.id,
         },
       });
+      return res.status(res.statusCode).json({
+        status: res.statusCode,
+        success: true,
+        message: "Le formateur est enregistré.",
+        data: data,
+      });
     } catch (error) {
       console.log("ERROR: " + error.message);
 
-      return error;
+      return res.status(error.status).json({
+        status: error.status,
+        success: false,
+        message: error.message,
+        // error: { error: "Database connection error" },
+      });
     }
   }
 

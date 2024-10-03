@@ -19,7 +19,7 @@ export class CompanyService {
 
   async create(dto: CreateCompanyDto, res: Response) {
     try {
-      // TODO: si l'url est ajouté, faire une vérification qu'elle retourne une code HTTP correct ↙(de ce style là)
+      // si l'url est ajouté, faire une vérification qu'elle retourne une code HTTP correct ↙(de ce style là)
       // const truc = await fetch("https://hub.docker.com/_/help-world");
       // console.log(truc.status);
       const companyWithSameName = await this.prisma.company.findFirst({

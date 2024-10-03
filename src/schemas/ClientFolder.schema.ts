@@ -24,7 +24,6 @@ export class ClientFolder {
   sessions: Session;
 
   @Prop({ type: TrainerSchema })
-  // TODO: demander si ça a un intérêt de lister les formateurs qui ont été commisionnés par chaque client
   pastTrainers: Trainer;
 
   @Prop({ type: TraineeSchema })

@@ -11,7 +11,7 @@ export class Session {
   @Prop()
   place: string;
 
-  @Prop() // TODO: mettre une default value
+  @Prop()
   date: string;
 
   @Prop()

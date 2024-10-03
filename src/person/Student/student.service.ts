@@ -111,5 +111,4 @@ export class StudentService {
       return error;
     }
   }
-  //todo verifier le crud company
 }
