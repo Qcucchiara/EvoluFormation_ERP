@@ -27,6 +27,7 @@ console.log(process.env.MONGO_URL);
     MongooseModule.forRoot(process.env.MONGO_URL, {
       dbName: process.env.MONGO_DATABASE,
     }),
+    ClientFolderModule,
     PersonModule,
     RoleModule,
     CompanyModule,
