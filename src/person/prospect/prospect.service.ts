@@ -59,7 +59,9 @@ export class ProspectService {
         },
       });
       const response = await this.prisma.person.findMany({
-        where: { role_id: prospectRole.id },
+        where: {
+          AND: [{ role_id: prospectRole.id }, { is_blacklisted: false }],
+        },
       });
       return res.status(res.statusCode).json({ message: response });
     } catch (error) {
@@ -68,7 +70,25 @@ export class ProspectService {
         .json({ message: error.message, statusCode: error.status });
     }
   }
-
+  async findAllBlacklist(res: Response) {
+    try {
+      const prospectRole = await this.prisma.role.findFirst({
+        where: {
+          name: RolePerson.PROSPECT,
+        },
+      });
+      const response = await this.prisma.person.findMany({
+        where: {
+          AND: [{ role_id: prospectRole.id }, { is_blacklisted: true }],
+        },
+      });
+      return res.status(res.statusCode).json({ message: response });
+    } catch (error) {
+      return res
+        .status(error.status)
+        .json({ message: error.message, statusCode: error.status });
+    }
+  }
   async findOne(id: string, res: Response) {
     try {
       const existingProspect = await this.prisma.person.findUnique({

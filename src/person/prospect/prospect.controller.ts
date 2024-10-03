@@ -25,6 +25,10 @@ export class prospectController {
   findAll(@Res() res: Response) {
     return this.prospectService.findAll(res);
   }
+  @Get("/blacklist")
+  findAllBlacklist(@Res() res: Response) {
+    return this.prospectService.findAllBlacklist(res);
+  }
   @Get("/:id")
   findOne(@Param("id") id: string, @Res() res: Response) {
     return this.prospectService.findOne(id, res);

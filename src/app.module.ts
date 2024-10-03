@@ -24,9 +24,10 @@ console.log(process.env.MONGO_URL);
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // MongooseModule.forRoot(process.env.MONGO_URL, {
-    //   dbName: process.env.MONGO_DATABASE,
-    // }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      dbName: process.env.MONGO_DATABASE,
+    }),
+    ClientFolderModule,
     PersonModule,
     RoleModule,
     CompanyModule,
