@@ -12,8 +12,13 @@ export class ResourceService {
   async create(dto: CreateResourceDto, res: Response) {
     try {
       // Tester si l'id de la catégorie assignée existe, sinon throw une erreur
+      const category = await this.prisma.ressource_type.findUnique({
+        where: { id: dto.type_id },
+      });
 
-      const data = await this.prisma.ressource.create({ data: { ...dto } });
+      const data = await this.prisma.ressource.create({
+        data: { type_name: category.name, ...dto },
+      });
 
       return res.status(res.statusCode).json({
         status: res.statusCode,
