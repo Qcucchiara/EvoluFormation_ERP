@@ -1,21 +1,3 @@
-// export type Quote = {
-//   quoteFile: DocumentInFolder;
-//   trainingAgreement: {
-//     fundingType:
-//       | "OPCO"
-//       | "CPF"
-//       | "Entreprise"
-//       | "Perso"
-//       | "Pole Emploi"
-//       | "Pouvoir Publique";
-//     clientId: string;
-//     modules: Module[];
-//     invoice: DocumentInFolder;
-//   };
-//   price: number;
-//   needAnalysis: string;
-// };
-
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import {
   DocumentInFolder,
