@@ -4,27 +4,27 @@ import {
   DocumentInFolderSchema,
 } from "./DocumentInFolder.schema";
 import { Module, ModuleSchema } from "./Module.schema";
-import { FundingType } from "src/utils/noSQLSchema/FolderType";
+// import { FundingType } from "src/utils/noSQLSchema/FolderType";
 
 @Schema()
 export class Quote {
   @Prop({ type: DocumentInFolderSchema })
   quoteFile: DocumentInFolder;
 
-  @Prop({
-    type: {
-      fundingType: { type: String, enum: FundingType },
-      clientId: String,
-      modules: ModuleSchema,
-      invoice: DocumentInFolderSchema,
-    },
-  })
-  trainingAgreement: {
-    fundingType: FundingType;
-    clientId: string;
-    modules: Module;
-    invoice: DocumentInFolder;
-  };
+  // @Prop({
+  //   type: {
+  //     fundingType: { type: String, enum: FundingType },
+  //     clientId: String,
+  //     modules: ModuleSchema,
+  //     invoice: DocumentInFolderSchema,
+  //   },
+  // })
+  // trainingAgreement: {
+  //   fundingType: FundingType;
+  //   clientId: string;
+  //   modules: Module;
+  //   invoice: DocumentInFolder;
+  // };
 
   @Prop()
   Price: number;
