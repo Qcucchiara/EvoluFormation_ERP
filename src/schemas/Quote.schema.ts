@@ -4,7 +4,10 @@ import {
   DocumentInFolderSchema,
 } from "./DocumentInFolder.schema";
 import { Module, ModuleSchema } from "./Module.schema";
-import { FundingENUM, FundingType } from "src/utils/noSQLSchema/FolderType";
+import {
+  FundingENUM,
+  FundingType,
+} from "../../src/utils/noSQLSchema/FolderType";
 
 @Schema()
 export class Quote {
