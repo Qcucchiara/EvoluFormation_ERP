@@ -71,3 +71,12 @@ export enum FundingType {
   "Pole Emploi",
   "Pouvoir Publique",
 }
+
+export const FundingENUM = {
+  OPCO: "OPCO",
+  CPF: "CPF",
+  Entreprise: "Entreprise",
+  Perso: "Perso",
+  Pole_Emploi: "Pole_Emploi",
+  Pouvoir_Publique: "Pouvoir_Publique",
+};
