@@ -4,10 +4,24 @@ import {
   DocumentInFolderSchema,
 } from "./DocumentInFolder.schema";
 import { Module, ModuleSchema } from "./Module.schema";
-import {
-  FundingENUM,
-  FundingType,
-} from "../../src/utils/noSQLSchema/FolderType";
+
+enum FundingType {
+  "OPCO",
+  "CPF",
+  "Entreprise",
+  "Perso",
+  "Pole Emploi",
+  "Pouvoir Publique",
+}
+
+const FundingENUM = {
+  OPCO: "OPCO",
+  CPF: "CPF",
+  Entreprise: "Entreprise",
+  Perso: "Perso",
+  Pole_Emploi: "Pole_Emploi",
+  Pouvoir_Publique: "Pouvoir_Publique",
+};
 
 @Schema()
 export class Quote {
