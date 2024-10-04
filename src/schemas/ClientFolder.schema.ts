@@ -15,7 +15,7 @@ import { Session, SessionSchema } from "./Session.schema";
 @Schema()
 export class ClientFolder {
   @Prop()
-  companyId: string;
+  company_has_personId: string;
 
   @Prop({ type: QuoteSchema })
   quotes: Quote;
@@ -28,6 +28,12 @@ export class ClientFolder {
 
   @Prop({ type: TraineeSchema })
   pastTrainees: Trainee;
+
+  @Prop({ default: new Date() }) // ajout created_at et updated_at dans les dossiers.
+  created_at: string;
+
+  @Prop({ default: new Date() })
+  updated_at: string;
 }
 
 export const ClientFolderSchema = SchemaFactory.createForClass(ClientFolder);

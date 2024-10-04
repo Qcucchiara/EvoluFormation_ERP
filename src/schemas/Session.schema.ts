@@ -20,22 +20,24 @@ export class Session {
   @Prop({ type: DocumentInFolderSchema })
   signatureSheet: DocumentInFolder;
 
-  @Prop({ type: TraineeSchema })
-  trainees: Trainee;
+  @Prop([{ type: TraineeSchema }])
+  trainees: Trainee[];
 
-  @Prop({ type: TrainerSchema })
-  trainers: Trainer;
+  @Prop([{ type: TrainerSchema }])
+  trainers: Trainer[];
 
-  @Prop({
-    type: {
-      date: String,
-      hours: {
-        start: Number,
-        end: Number,
+  @Prop([
+    {
+      type: {
+        date: String,
+        hours: {
+          start: Number,
+          end: Number,
+        },
+        periodsInfo: String,
       },
-      periodsInfo: String,
     },
-  })
+  ])
   periods: {
     date: string;
     hours: {
@@ -43,7 +45,7 @@ export class Session {
       end: number;
     };
     periodsInfo: string;
-  };
+  }[];
 }
 
 export const SessionSchema = SchemaFactory.createForClass(Session);

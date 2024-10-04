@@ -15,6 +15,7 @@ import { AuthModule } from "./auth/auth.module";
 import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ClientFolderModule } from "./client-folder/client-folder.module";
+import { SessionModule } from './session/session.module';
 
 console.log(process.env.MONGO_DATABASE);
 console.log(process.env.MONGO_URL);
@@ -41,6 +42,7 @@ console.log(process.env.MONGO_URL);
     PrismaModule,
     AuthModule,
     RessourceTypeModule,
+    SessionModule,
   ],
 })
 export class AppModule {}

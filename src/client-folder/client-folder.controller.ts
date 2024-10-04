@@ -7,11 +7,13 @@ import {
   Param,
   Delete,
   UseGuards,
+  Res,
 } from "@nestjs/common";
 import { ClientFolderService } from "./client-folder.service";
 import { CreateClientFolderDto } from "./dto/create-client-folder.dto";
 import { UpdateClientFolderDto } from "./dto/update-client-folder.dto";
 import { JwtGuard } from "src/auth/guards";
+import { Response } from "express";
 
 @UseGuards(JwtGuard)
 @Controller("client-folder")
@@ -19,8 +21,8 @@ export class ClientFolderController {
   constructor(private readonly clientFolderService: ClientFolderService) {}
 
   @Post()
-  create(@Body() createClientFolderDto: CreateClientFolderDto) {
-    return this.clientFolderService.create(createClientFolderDto);
+  create(@Body() dto, @Res() res: Response) {
+    return this.clientFolderService.create(dto, res);
   }
 
   @Get()

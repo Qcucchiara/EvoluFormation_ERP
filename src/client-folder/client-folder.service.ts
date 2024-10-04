@@ -12,14 +12,33 @@ export class ClientFolderService {
     private clientFolder: Model<ClientFolder & Document>,
   ) {}
 
-  async create(createClientFolderDto: CreateClientFolderDto) {
-    const newFolder = new this.clientFolder();
-    console.log(newFolder);
-    return newFolder.save();
+  async create(dto, res) {
+    try {
+      // Je crois qu'il y a qu'un seul dossier par clients
+      // Tentative de correction de l'erreur juste au dessus avec un changement de compagnyId => person_has_compagnyId dans le dto
+      const newFolder = new this.clientFolder(dto);
+      const data = await newFolder.save();
+      return res.status(res.statusCode).json({
+        status: res.statusCode,
+        success: true,
+        message: "Le dossier a été correctement créée",
+        // data: data,
+      });
+    } catch (error) {
+      console.log("ERROR: " + error.message);
+      return res.status(error.status).json({
+        status: error.status,
+        success: false,
+        message: error.message,
+        // error: { error: "Database connection error" },
+      });
+    }
   }
 
   async findAll() {
-    return this.clientFolder.find().exec();
+    try {
+      return this.clientFolder.find().exec();
+    } catch (error) {}
   }
 
   findOne(id: number) {
