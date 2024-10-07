@@ -12,6 +12,7 @@ import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 import { Response } from "express";
+import * as INDEX from "../utils/index.CommentCategory.json";
 
 @Injectable()
 export class CompanyService {
@@ -25,6 +26,7 @@ export class CompanyService {
       const companyWithSameName = await this.prisma.company.findFirst({
         where: { name: dto.name },
       });
+      console.log(INDEX);
 
       if (companyWithSameName) {
         throw new ForbiddenException("Nom déjà utilisé");
@@ -39,14 +41,15 @@ export class CompanyService {
       }
 
       const data = await this.prisma.company.create({ data: { ...dto } });
-      // await this.prisma.comment.create({
-      //   data: {
-      //     person_id: data.id,
-      //     title: "INDEX",
-      //     content: "INDEX",
-      //     category_id: indexCommentCategory.id,
-      //   },
-      // });
+
+      await this.prisma.comment.create({
+        data: {
+          company_id: data.id,
+          title: "INDEX",
+          content: "INDEX",
+          category_id: INDEX.INDEX_COMMENT_CATEGORY,
+        },
+      });
 
       return res.status(res.statusCode).json({
         status: res.statusCode,

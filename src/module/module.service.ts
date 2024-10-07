@@ -4,6 +4,7 @@ import { UpdateModuleDto } from "./dto/update-module.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Response } from "express";
 import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
+import * as INDEX from "../utils/index.CommentCategory.json";
 
 @Injectable()
 export class ModuleService {
@@ -21,6 +22,15 @@ export class ModuleService {
       // TODO: rajouter le nom des catégories BPF directement dans la table module
       dto.duration = dto.duration + "";
       const data = await this.prisma.module.create({ data: { ...dto } });
+
+      await this.prisma.comment.create({
+        data: {
+          module_id: data.id,
+          title: "INDEX",
+          content: "INDEX",
+          category_id: INDEX.INDEX_COMMENT_CATEGORY,
+        },
+      });
       return res.status(res.statusCode).json({
         status: res.statusCode,
         success: true,
