@@ -95,14 +95,8 @@ export class CompanyService {
     }
   }
 
-  async findAll(res: Response) {
-    try {
-      return await this.prisma.company.findMany();
-    } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return error;
-    }
+  async findAll() {
+    return await this.prisma.company.findMany();
   }
 
   findOne(id: string, res: Response) {

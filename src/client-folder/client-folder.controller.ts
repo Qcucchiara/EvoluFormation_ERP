@@ -15,7 +15,7 @@ import { UpdateClientFolderDto } from "./dto/update-client-folder.dto";
 import { JwtGuard } from "src/auth/guards";
 import { Response } from "express";
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 @Controller("client-folder")
 export class ClientFolderController {
   constructor(private readonly clientFolderService: ClientFolderService) {}

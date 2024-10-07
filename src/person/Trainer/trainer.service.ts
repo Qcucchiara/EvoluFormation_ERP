@@ -100,7 +100,7 @@ export class TrainerService {
         const isEmailUsed = await this.prisma.person.findFirst({
           where: { email: dto.email },
         });
-        if (isEmailUsed) {
+        if (isEmailUsed && isEmailUsed.email !== dto.email) {
           throw new ForbiddenException("Email déja utilisé!");
         }
       }
@@ -110,11 +110,10 @@ export class TrainerService {
             phone: dto.phone,
           },
         });
-        if (isPhoneUsed) {
+        if (isPhoneUsed && isPhoneUsed.phone !== dto.phone) {
           throw new ForbiddenException("Téléphone déja utilisé!");
         }
       }
-
       await this.prisma.person.update({ where: { id: id }, data: { ...dto } });
 
       return { message: "Modification effectuée", statusCode: "200" };

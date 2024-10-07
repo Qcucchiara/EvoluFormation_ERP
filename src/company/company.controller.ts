@@ -17,6 +17,12 @@ import { Response } from "express";
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
+  @Get("/test")
+  findAll() {
+    return this.companyService.findAll();
+
+  }
+
   @Post()
   create(@Body() createCompanyDto: CreateCompanyDto, @Res() res: Response) {
     return this.companyService.create(createCompanyDto, res);
@@ -27,15 +33,10 @@ export class CompanyController {
     return this.companyService.linkToPerson(dto, res);
   }
 
-  @Get()
-  findAll(@Res() res: Response) {
-    return this.companyService.findAll(res);
-  }
-
-  @Get(":id")
-  findOne(@Param("id") id: string, @Res() res: Response) {
-    return this.companyService.findOne(id, res);
-  }
+  // @Get(":id")
+  // findOne(@Param("id") id: string, @Res() res: Response) {
+  //   return this.companyService.findOne(id, res);
+  // }
 
   @Patch(":id")
   update(

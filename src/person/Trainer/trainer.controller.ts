@@ -13,6 +13,7 @@ import { TrainerService } from "./trainer.service";
 import { createTrainerDTO } from "../dto/create-trainer.dto";
 import { stringify } from "querystring";
 import { Response } from "express";
+import { updateTrainerDTO } from "../dto";
 
 @Controller("trainer")
 export class trainerController {
@@ -23,23 +24,23 @@ export class trainerController {
     return this.trainerService.create(dto, res);
   }
 
-  // @Get()
-  // findAll(@Res() res: Response) {
-  //   return this.trainerService.findAll(res);
-  // }
+  @Get()
+  findAll() {
+    return this.trainerService.findAll();
+  }
 
-  // @Get(":id")
-  // findOne(@Param("id") id: string, @Res() res: Response) {
-  //   return this.trainerService.findOne(id, res);
-  // }
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.trainerService.findOne(id);
+  }
 
-  // @Patch(":id")
-  // update(@Param("id") id: string, @Body() dto, @Res() res: Response) {
-  //   return this.trainerService.update(id, dto, res);
-  // }
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() dto: updateTrainerDTO) {
+    return this.trainerService.update(id, dto);
+  }
 
-  // @Delete(":id")
-  // remove(@Param("id") id: string, @Res() res: Response) {
-  //   return this.trainerService.remove(id, res);
-  // }
+  @Delete(":id")
+  remove(@Param("id") id: string) {
+    return this.trainerService.remove(id);
+  }
 }
