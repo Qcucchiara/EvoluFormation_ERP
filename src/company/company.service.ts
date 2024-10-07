@@ -38,7 +38,15 @@ export class CompanyService {
         throw new ForbiddenException("SIRET déjà utilisé");
       }
 
-      await this.prisma.company.create({ data: { ...dto } });
+      const data = await this.prisma.company.create({ data: { ...dto } });
+      // await this.prisma.comment.create({
+      //   data: {
+      //     person_id: data.id,
+      //     title: "INDEX",
+      //     content: "INDEX",
+      //     category_id: indexCommentCategory.id,
+      //   },
+      // });
 
       return res.status(res.statusCode).json({
         status: res.statusCode,

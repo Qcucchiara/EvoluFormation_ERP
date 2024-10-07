@@ -17,8 +17,10 @@ export class CommentService {
       const category = await this.prisma.comment_category.findUnique({
         where: { name: dto.categoryName },
       });
+
       if (!category) {
-        throw new ForbiddenException("La catégorie n'existe pas.");
+        // vérifier si la catégorie existe, sinon en créer une nouvelle.
+        throw new ForbiddenException("La catégorie n'existe pas."); //TODO: en créer une nouvelle
       }
 
       if (category.is_unique === true) {
@@ -41,19 +43,19 @@ export class CommentService {
     }
   }
 
-  findAll(res) {
+  findAll(res: Response) {
     return `This action returns all comment`;
   }
 
-  findOne(id: string, res) {
+  findOne(id: string, res: Response) {
     return `This action returns a #${id} comment`;
   }
 
-  update(id: string, dto, res) {
+  update(id: string, dto, res: Response) {
     return `This action updates a #${id} comment`;
   }
 
-  remove(id: string, res) {
+  remove(id: string, res: Response) {
     return `This action removes a #${id} comment`;
   }
 }
