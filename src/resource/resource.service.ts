@@ -16,9 +16,9 @@ export class ResourceService {
         where: { id: dto.type_id },
       });
 
-      const data = await this.prisma.ressource.create({
-        data: { type_name: category.name, ...dto },
-      });
+      // const data = await this.prisma.ressource.create({
+      //   data: { type_name: category.name, ...dto },
+      // });
 
       return res.status(res.statusCode).json({
         status: res.statusCode,
@@ -38,23 +38,24 @@ export class ResourceService {
   }
 
   async findAll(res: Response) {
-    try {
-      const data = await this.prisma.ressource.findMany();
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "La liste a été récupéré",
-        data: data,
-      });
-    } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
-    }
+    // try {
+    //   const data = await this.prisma.ressource.findMany();
+    //   return res.status(res.statusCode).json({
+    //     status: res.statusCode,
+    //     success: true,
+    //     message: "La liste a été récupéré",
+    //     data: data,
+    //   });
+    // } catch (error) {
+    //   console.log("ERROR: " + error.message);
+    //   return res.status(error.status).json({
+    //     status: error.status,
+    //     success: false,
+    //     message: error.message,
+    //     // error: { error: "Database connection error" },
+    //   });
+    console.log("test");
+    return await this.prisma.ressource.findMany();
   }
 
   async findOne(id: string, res: Response) {

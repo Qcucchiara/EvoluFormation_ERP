@@ -9,16 +9,15 @@ import {
   Res,
 } from "@nestjs/common";
 import { SessionService } from "./session.service";
-import { CreateSessionDto } from "./dto/create-session.dto";
-import { UpdateSessionDto } from "./dto/update-session.dto";
 import { Response } from "express";
+import { CreateSessionDto } from "./dto";
 
 @Controller("session")
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
 
   @Post()
-  create(@Body() dto, @Res() res: Response) {
+  create(@Body() dto: CreateSessionDto, @Res() res: Response) {
     return this.sessionService.create(dto, res);
   }
 

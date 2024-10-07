@@ -14,7 +14,7 @@ import { CreateResourceDto, UpdateResourceDto } from "./dto";
 import { Response } from "express";
 import { JwtGuard } from "src/auth/guards";
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 @Controller("resource")
 export class ResourceController {
   constructor(private readonly resourceService: ResourceService) {}
@@ -24,7 +24,7 @@ export class ResourceController {
     return this.resourceService.create(dto, res);
   }
 
-  @Get()
+  @Get("/test")
   findAll(@Res() res: Response) {
     return this.resourceService.findAll(res);
   }
