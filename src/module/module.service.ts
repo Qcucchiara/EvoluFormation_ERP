@@ -5,6 +5,9 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { Response } from "express";
 import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 import * as INDEX from "../utils/index.CommentCategory.json";
+import createIndexComment from "src/utils/createIndexComment";
+import returnResponse from "src/utils/responseFunctions/res.return";
+import returnError from "src/utils/responseFunctions/error.return";
 
 @Injectable()
 export class ModuleService {
@@ -23,28 +26,24 @@ export class ModuleService {
       dto.duration = dto.duration + "";
       const data = await this.prisma.module.create({ data: { ...dto } });
 
-      await this.prisma.comment.create({
-        data: {
-          module_id: data.id,
-          title: "INDEX",
-          content: "INDEX",
-          category_id: INDEX.INDEX_COMMENT_CATEGORY,
-        },
-      });
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Le module a été correctement créé",
-        // data: data,
-      });
+      createIndexComment(this.prisma, { module_id: data.id });
+
+      return returnResponse(res, "Le module a été correctement créé.");
+      // return res.status(res.statusCode).json({
+      //   status: res.statusCode,
+      //   success: true,
+      //   message: "Le module a été correctement créé",
+      //   // data: data,
+      // });
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
+      // console.log("ERROR: " + error.message);
+      // return res.status(error.status).json({
+      //   status: error.status,
+      //   success: false,
+      //   message: error.message,
+      //   // error: { error: "Database connection error" },
+      // });
     }
   }
 

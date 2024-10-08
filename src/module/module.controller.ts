@@ -19,7 +19,6 @@ export class ModuleController {
 
   @Post()
   async create(@Body() dto: CreateModuleDto, @Res() res: Response) {
-    console.log(dto);
     return this.moduleService.create(dto, res);
   }
 
