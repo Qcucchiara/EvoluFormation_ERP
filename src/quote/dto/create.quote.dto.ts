@@ -11,11 +11,13 @@ import { CreateSessionDto, DocumentInFolder } from "src/session/dto";
 export class CreateQuoteDTO {
   @ValidateNested({ each: true })
   @Type(() => DocumentInFolder)
+  @IsNotEmpty()
   quoteFile: DocumentInFolder;
 
   @ValidateNested({ each: true })
   @Type(() => trainingAgreement)
-  trainingAgreement: trainingAgreement;
+  @IsNotEmpty()
+  trainingAgreement: {};
 
   @IsNumber()
   @IsNotEmpty()
@@ -23,7 +25,7 @@ export class CreateQuoteDTO {
 
   @IsString()
   @IsNotEmpty()
-  neeedAnalysis: string;
+  needAnalysis: string;
 }
 export class trainingAgreement {
   @IsString()
@@ -37,10 +39,12 @@ export class trainingAgreement {
 
   @ValidateNested({ each: true })
   @Type(() => Module)
-  modules: Module;
+  @IsNotEmpty()
+  modules: {};
 
   @ValidateNested({ each: true })
   @Type(() => DocumentInFolder)
+  @IsNotEmpty()
   invoice: DocumentInFolder;
 }
 export class Module {
