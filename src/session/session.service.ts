@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateSessionDto } from "./dto/create-session.dto";
 import { UpdateSessionDto } from "./dto/update-session.dto";
 import { InjectModel } from "@nestjs/mongoose";
@@ -12,16 +12,15 @@ export class SessionService {
     @InjectModel(Session.name)
     private session: Model<Session & Document>,
   ) {}
-  async create(dto, res: Response) {
+  async create(dto: CreateSessionDto, res: Response) {
     try {
-      // vérifier si le dossier existe ou pas. s'il exsite pas, le créer ou throw une error.
       const newSession = new this.session(dto);
       const data = await newSession.save();
       return res.status(res.statusCode).json({
         status: res.statusCode,
         success: true,
         message: "Le dossier a été correctement créée",
-        // data: data,
+        data: data,
       });
     } catch (error) {
       console.log("ERROR: " + error.message);
@@ -29,24 +28,37 @@ export class SessionService {
         status: error.status,
         success: false,
         message: error.message,
-        // error: { error: "Database connection error" },
+        error: { error: "Database connection error" },
       });
     }
   }
 
   findAll() {
-    return `This action returns all session`;
+    return this.session.find().exec();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} session`;
+  async findOne(id: string) {
+    try {
+      return await this.session.findById(id).exec();
+    } catch (error) {
+      throw new NotFoundException("Not found");
+    }
   }
 
-  update(id: string, dto) {
-    return `This action updates a #${id} session`;
+  async update(id: string, dto: UpdateSessionDto) {
+    try {
+      await this.session.findById(id).exec();
+      return await this.session.findByIdAndUpdate(id, dto).exec();
+    } catch (error) {
+      throw new NotFoundException("Not found");
+    }
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} session`;
+  async remove(id: string) {
+    const existingSession = await this.session.findById(id).exec();
+    if (!existingSession) {
+      throw new NotFoundException("Not found");
+    }
+    return await this.session.findByIdAndDelete(id).exec();
   }
 }

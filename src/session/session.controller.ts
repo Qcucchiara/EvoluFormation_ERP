@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { SessionService } from "./session.service";
 import { Response } from "express";
-import { CreateSessionDto } from "./dto";
+import { CreateSessionDto, UpdateSessionDto } from "./dto";
 
 @Controller("session")
 export class SessionController {
@@ -26,13 +26,13 @@ export class SessionController {
     return this.sessionService.findAll();
   }
 
-  @Get(":id")
+  @Get("/:id")
   findOne(@Param("id") id: string) {
     return this.sessionService.findOne(id);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() dto) {
+  update(@Param("id") id: string, @Body() dto: UpdateSessionDto) {
     return this.sessionService.update(id, dto);
   }
 

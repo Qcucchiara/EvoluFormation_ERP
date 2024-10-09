@@ -14,7 +14,7 @@ import {
 // import { Trainee } from "src/schemas/Trainee.schema";
 // import { Trainer } from "src/schemas/Trainer.schema";
 
-class DocumentInFolder {
+export class DocumentInFolder {
   @IsString()
   @IsNotEmpty()
   fileName: string;
@@ -23,32 +23,37 @@ class DocumentInFolder {
   @IsNotEmpty()
   filePath: string;
 }
-class Trainee {
+export class Trainee {
   @IsString()
   @IsNotEmpty()
   traineeId: string;
 
+  @IsNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => DocumentInFolder)
   trainingCertificate: DocumentInFolder;
 
+  @IsNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => DocumentInFolder)
   skillsAssessment: DocumentInFolder;
 
+  @IsNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => DocumentInFolder)
   placementTest: DocumentInFolder;
 
+  @IsNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => DocumentInFolder)
   hotEvaluation: DocumentInFolder;
 }
-class Trainer {
+export class Trainer {
   @IsString()
   @IsNotEmpty()
   trainerId: string;
 
+  @IsNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => DocumentInFolder)
   contract: DocumentInFolder;
@@ -56,6 +61,29 @@ class Trainer {
   @IsString()
   @IsNotEmpty()
   opinion: string;
+}
+export class periods {
+  @IsString()
+  @IsNotEmpty()
+  date: string;
+
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => hours)
+  hours: {};
+
+  @IsString()
+  @IsNotEmpty()
+  periodsInfo: string;
+}
+export class hours {
+  @IsNumber()
+  @IsNotEmpty()
+  start: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  end: number;
 }
 export class CreateSessionDto {
   @IsString()
@@ -70,6 +98,7 @@ export class CreateSessionDto {
   @IsNotEmpty()
   duration: number;
 
+  @IsNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => DocumentInFolder)
   signatureSheet: DocumentInFolder;
@@ -79,15 +108,13 @@ export class CreateSessionDto {
   @ArrayNotEmpty()
   trainees: Trainee[];
 
+  @ValidateNested({ each: true })
+  @Type(() => Trainer)
   @ArrayNotEmpty()
   trainers: Trainer[];
 
-  //   periods: {
-  //     date: string;
-  //     hours: {
-  //       start: number;
-  //       end: number;
-  //     };
-  //     periodsInfo: string;
-  //   }[];
+  @ValidateNested({ each: true })
+  @Type(() => periods)
+  @ArrayNotEmpty()
+  periods: periods[];
 }
