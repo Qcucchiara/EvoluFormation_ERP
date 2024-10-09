@@ -16,6 +16,7 @@ import { RessourceTypeModule } from "./ressource_type/ressource_type.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ClientFolderModule } from "./client-folder/client-folder.module";
 import { SessionModule } from './session/session.module';
+import { QuoteModule } from './quote/quote.module';
 
 console.log(process.env.MONGO_DATABASE);
 console.log(process.env.MONGO_URL);
@@ -43,6 +44,7 @@ console.log(process.env.MONGO_URL);
     AuthModule,
     RessourceTypeModule,
     SessionModule,
+    QuoteModule,
   ],
 })
 export class AppModule {}
