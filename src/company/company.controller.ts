@@ -17,12 +17,6 @@ import { Response } from "express";
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
-  @Get("/test")
-  findAll() {
-    return this.companyService.findAll();
-
-  }
-
   @Post()
   create(@Body() createCompanyDto: CreateCompanyDto, @Res() res: Response) {
     return this.companyService.create(createCompanyDto, res);
@@ -31,6 +25,11 @@ export class CompanyController {
   @Post()
   LinkToPerson(dto: LinkToPersonDTO, @Res() res: Response) {
     return this.companyService.linkToPerson(dto, res);
+  }
+
+  @Get()
+  findAll() {
+    return this.companyService.findAll();
   }
 
   // @Get(":id")

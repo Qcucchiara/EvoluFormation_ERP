@@ -4,6 +4,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { CreateResourceDto, UpdateResourceDto } from "./dto";
 import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 import { Response } from "express";
+import * as INDEX from "../utils/index.CommentCategory.json";
 
 @Injectable()
 export class ResourceService {
@@ -15,11 +16,22 @@ export class ResourceService {
       const category = await this.prisma.ressource_type.findUnique({
         where: { id: dto.type_id },
       });
+      if (!category) {
+        throw new ForbiddenException("Catégogie non trouvé");
+      }
 
-      // const data = await this.prisma.ressource.create({
-      //   data: { type_name: category.name, ...dto },
-      // });
+      const data = await this.prisma.ressource.create({
+        data: { type_name: category.name, ...dto },
+      });
 
+      await this.prisma.comment.create({
+        data: {
+          ressource_id: data.id,
+          title: "INDEX",
+          content: "INDEX",
+          category_id: INDEX.INDEX_COMMENT_CATEGORY,
+        },
+      });
       return res.status(res.statusCode).json({
         status: res.statusCode,
         success: true,

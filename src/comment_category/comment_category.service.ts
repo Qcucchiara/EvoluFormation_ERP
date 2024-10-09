@@ -84,12 +84,16 @@ export class CommentCategoryService {
         throw new ForbiddenException("La catégorie n'exise pas.");
       }
       //TODO: en cours -- Quentin
-      // const data = await this.prisma.comment_category.update({where: {id: id}, })
+      const data = await this.prisma.comment_category.update({
+        where: { id: id },
+        data: { ...dto },
+      });
+
       return res.status(res.statusCode).json({
         status: res.statusCode,
         success: true,
         message: "Catégorie modifié avec succès.",
-        // data: data,
+        data: data,
       });
     } catch (error) {
       console.log("ERROR: " + error.message);
@@ -102,14 +106,24 @@ export class CommentCategoryService {
     }
   }
 
-  remove(id: string, res: Response) {
+  async remove(id: string, res: Response) {
     try {
-      const data = {};
+      const curentCateory = await this.prisma.comment_category.findUnique({
+        where: { id: id },
+      });
+
+      if (!curentCateory) {
+        throw new ForbiddenException("La catégorie n'exise pas.");
+      }
+
+      const data = await this.prisma.comment_category.delete({
+        where: { id: id },
+      });
       return res.status(res.statusCode).json({
         status: res.statusCode,
         success: true,
         message: "Catégorie supprimée avec succès.",
-        // data: data,
+        data: data,
       });
     } catch (error) {
       console.log("ERROR: " + error.message);
