@@ -13,6 +13,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 import { Response } from "express";
 import * as INDEX from "../utils/index.CommentCategory.json";
+import returnResponse from "src/utils/responseFunctions/res.return";
+import returnError from "src/utils/responseFunctions/error.return";
 
 @Injectable()
 export class CompanyService {
@@ -50,22 +52,9 @@ export class CompanyService {
           category_id: INDEX.INDEX_COMMENT_CATEGORY,
         },
       });
-
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Entreprise créé avec succès",
-        // data: data,
-      });
+      return returnResponse(res, "Entreprise créé avec succès", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
@@ -87,22 +76,9 @@ export class CompanyService {
       if (!data) {
         throw new ForbiddenException("La relation n'a pas été crée");
       }
-
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Relation créée avec succès",
-        // data: data,
-      });
+      return returnResponse(res, "Relation créée avec succès", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
@@ -113,11 +89,11 @@ export class CompanyService {
   findOne(id: string, res: Response) {
     try {
       // TODO: Chercher les dossiers associés à l'entreprise
-      return this.prisma.company.findUnique({ where: { id: id } });
+      const data = this.prisma.company.findUnique({ where: { id: id } });
+      //todo
+      return returnResponse(res, "La liste Entreprise à été envoyé", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return error;
+      return returnError(res, error);
     }
   }
 
@@ -143,22 +119,13 @@ export class CompanyService {
         where: { id: id },
         data: { ...dto },
       });
-      // return { message: null, content: updatedCompany, statusCode: 200 };
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "La liste de modules a été envoyé",
-        data: updatedCompany,
-      });
+      return returnResponse(
+        res,
+        "La liste de modules a été envoyé",
+        updatedCompany,
+      );
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
@@ -175,30 +142,17 @@ export class CompanyService {
       }
 
       const data = await this.prisma.company.delete({ where: { id: id } });
-
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Entreprise supprimée avec succès",
-        data: data,
-      });
+      return returnResponse(res, "Entreprise supprimée avec succès", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
+      return returnError(res, error);
 
-      const content = await handleDeleteOnRestrictResponse(
-        this.prisma,
-        id,
-        "company",
-        ["company_has_contact", "comment"],
-        // true,
-      );
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message ? error.message : "Unexpected error",
-        error: content,
-      });
+      // const content = await handleDeleteOnRestrictResponse(
+      //   this.prisma,
+      //   id,
+      //   "company",
+      //   ["company_has_contact", "comment"],
+      //   // true,
+      // );
 
       // return {
       //   message:
