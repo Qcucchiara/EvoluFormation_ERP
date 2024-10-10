@@ -82,16 +82,20 @@ export class CompanyService {
     }
   }
 
-  async findAll() {
-    return await this.prisma.company.findMany();
+  async findAll(res: Response) {
+    try {
+      const data = await this.prisma.company.findMany();
+      return returnResponse(res, "La liste Entreprise à été envoyé", data);
+    } catch (error) {
+      return returnError(res, error);
+    }
   }
 
   findOne(id: string, res: Response) {
     try {
       // TODO: Chercher les dossiers associés à l'entreprise
       const data = this.prisma.company.findUnique({ where: { id: id } });
-      //todo
-      return returnResponse(res, "La liste Entreprise à été envoyé", data);
+      return returnResponse(res, "Entreprise à été envoyé", data);
     } catch (error) {
       return returnError(res, error);
     }
