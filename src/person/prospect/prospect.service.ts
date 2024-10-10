@@ -3,6 +3,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { createProspectDto, updateProspectDto } from "../dto";
 import { RolePerson } from "src/utils/const";
 import { Response } from "express";
+import returnResponse from "src/utils/responseFunctions/res.return";
+import returnError from "src/utils/responseFunctions/error.return";
 @Injectable()
 export class ProspectService {
   constructor(private prisma: PrismaService) {}
@@ -27,7 +29,7 @@ export class ProspectService {
       // TODO trouver et verifier si l'entreprise existe
       // TODO faire le type entreprise auto entrepreneur etc
       // TODO faire les commentaires entité
-      await this.prisma.person.create({
+      const data = await this.prisma.person.create({
         data: {
           first_name: dto.first_name,
           last_name: dto.last_name,
@@ -42,13 +44,12 @@ export class ProspectService {
           role_id: role_id.id,
         },
       });
-      return res
-        .status(res.statusCode)
-        .json({ message: "Prospect crée avec succès", statusCode: 201 });
+      return returnResponse(res, "Prospect crée avec succès", data);
+      // return res
+      //   .status(res.statusCode)
+      //   .json({ message: "Prospect crée avec succès", statusCode: 201 });
     } catch (error) {
-      return res
-        .status(error.status)
-        .json({ message: error.message, statusCode: error.status });
+      return returnError(res, error);
     }
   }
   async findAll(res: Response) {
@@ -58,16 +59,14 @@ export class ProspectService {
           name: RolePerson.PROSPECT,
         },
       });
-      const response = await this.prisma.person.findMany({
+      const data = await this.prisma.person.findMany({
         where: {
           AND: [{ role_id: prospectRole.id }, { is_blacklisted: false }],
         },
       });
-      return res.status(res.statusCode).json({ message: response });
+      return returnResponse(res, "La liste de Prospects à été envoyé ", data);
     } catch (error) {
-      return res
-        .status(error.status)
-        .json({ message: error.message, statusCode: error.status });
+      return returnError(res, error);
     }
   }
   async findAllBlacklist(res: Response) {
@@ -77,16 +76,18 @@ export class ProspectService {
           name: RolePerson.PROSPECT,
         },
       });
-      const response = await this.prisma.person.findMany({
+      const data = await this.prisma.person.findMany({
         where: {
           AND: [{ role_id: prospectRole.id }, { is_blacklisted: true }],
         },
       });
-      return res.status(res.statusCode).json({ message: response });
+      return returnResponse(
+        res,
+        "La liste de Prospects banni à été envoyé ",
+        data,
+      );
     } catch (error) {
-      return res
-        .status(error.status)
-        .json({ message: error.message, statusCode: error.status });
+      return returnError(res, error);
     }
   }
   async findOne(id: string, res: Response) {
@@ -96,11 +97,11 @@ export class ProspectService {
       });
       if (existingProspect) {
         delete existingProspect.role_id;
-        return res.status(res.statusCode).json(existingProspect);
+        return returnResponse(res, "Prospects trouver ", existingProspect);
       }
       throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      return returnError(res, error);
     }
   }
   async update(id: string, dto: updateProspectDto, res: Response) {
@@ -129,17 +130,13 @@ export class ProspectService {
           throw new ForbiddenException("Téléphone déja utilisé!");
         }
       }
-      await this.prisma.person.update({
+      const data = await this.prisma.person.update({
         where: { id: id },
         data: { ...dto },
       });
-      return res
-        .status(res.statusCode)
-        .json({ message: "Modification effectuée" });
+      return returnResponse(res, "Le prospect à été modifier ", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return res.status(error.status).json({ message: error.message });
+      return returnError(res, error);
     }
   }
   async toggleBlacklist(id: string, res: Response) {
@@ -158,7 +155,7 @@ export class ProspectService {
       if (existingProspect.Role.name !== RolePerson.PROSPECT) {
         throw new ForbiddenException("Ce n'est pas un prospect");
       }
-      await this.prisma.person.update({
+      const data = await this.prisma.person.update({
         where: {
           id: id,
         },
@@ -166,9 +163,9 @@ export class ProspectService {
           is_blacklisted: !existingProspect.is_blacklisted,
         },
       });
-      return { message: "Modification effectuer", statusCode: 200 };
+      return returnResponse(res, "Modification effectuer", data);
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      return returnError(res, error);
     }
   }
   async remove(id: string, res: Response) {
@@ -178,11 +175,11 @@ export class ProspectService {
       });
       if (existingProspect) {
         await this.prisma.person.delete({ where: { id: id } });
-        return { message: "Prospect supprimé", statusCode: 200 };
+        return returnResponse(res, "Prospects trouver ", existingProspect);
       }
       throw new ForbiddenException("Prospect non trouvé");
     } catch (error) {
-      return res.status(error.status).json({ message: error.message });
+      return returnError(res, error);
     }
   }
 }
