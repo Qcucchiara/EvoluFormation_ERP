@@ -13,6 +13,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 import { Response } from "express";
 import * as INDEX from "../utils/index.CommentCategory.json";
+import returnResponse from "src/utils/responseFunctions/res.return";
+import returnError from "src/utils/responseFunctions/error.return";
 
 @Injectable()
 export class CompanyService {
@@ -51,21 +53,9 @@ export class CompanyService {
         },
       });
 
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Entreprise créé avec succès",
-        // data: data,
-      });
+      return returnResponse(res, "Entreprise créée.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
@@ -88,21 +78,9 @@ export class CompanyService {
         throw new ForbiddenException("La relation n'a pas été crée");
       }
 
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Relation créée avec succès",
-        // data: data,
-      });
+      return returnResponse(res, "Relation créée.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
@@ -110,14 +88,13 @@ export class CompanyService {
     return await this.prisma.company.findMany();
   }
 
-  findOne(id: string, res: Response) {
+  async findOne(id: string, res: Response) {
     try {
       // TODO: Chercher les dossiers associés à l'entreprise
-      return this.prisma.company.findUnique({ where: { id: id } });
+      const data = await this.prisma.company.findUnique({ where: { id: id } });
+      return returnResponse(res, "Liste entreprises envoyé.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return error;
+      return returnError(res, error);
     }
   }
 
@@ -139,26 +116,14 @@ export class CompanyService {
           throw new ForbiddenException("SIRET déjà utilisé");
         }
       }
-      const updatedCompany = await this.prisma.company.update({
+      const data = await this.prisma.company.update({
         where: { id: id },
         data: { ...dto },
       });
       // return { message: null, content: updatedCompany, statusCode: 200 };
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "La liste de modules a été envoyé",
-        data: updatedCompany,
-      });
+      return returnResponse(res, "Entreprise modifié.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
@@ -176,15 +141,8 @@ export class CompanyService {
 
       const data = await this.prisma.company.delete({ where: { id: id } });
 
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Entreprise supprimée avec succès",
-        data: data,
-      });
+      return returnResponse(res, "Entreprise supprimée.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
       const content = await handleDeleteOnRestrictResponse(
         this.prisma,
         id,
@@ -192,21 +150,7 @@ export class CompanyService {
         ["company_has_contact", "comment"],
         // true,
       );
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message ? error.message : "Unexpected error",
-        error: content,
-      });
-
-      // return {
-      //   message:
-      //     "des conflits avec d'autres tableaux ont été trouvés. \n" +
-      //     "Veuillez corriger les contraintes avant de recommencer.",
-      //   content: content,
-      //   statusCode: 409,
-      // };
+      return returnError(res, error, content);
     }
   }
 }

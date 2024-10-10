@@ -15,9 +15,16 @@ datasource db {
 
 model Role {
   id      String   @id @default(uuid())
-  name    String   @unique
+  name    RoleName @unique
   quality String?
   person  Person[]
+}
+
+enum RoleName {
+  Trainer
+  Student
+  Prospect
+  Admin
 }
 
 model Person {
@@ -168,22 +175,28 @@ model Ressource_type {
 }
 
 model Comment {
-  id           String  @id @default(uuid())
-  company_id   String?
-  person_id    String?
-  module_id    String?
-  ressource_id String?
-  title        String?
-  content      String
-  category_id  String
+  id String @id @default(uuid())
+
+  entity_id   String
+  entity_type EntityType
+  title       String?
+  content     String
+  category_id String
 
   created_at DateTime         @default(now())
   updated_at DateTime         @updatedAt
   category   Comment_category @relation(fields: [category_id], references: [id])
-  Company    Company?         @relation(fields: [company_id], references: [id])
-  Ressource  Ressource?       @relation(fields: [ressource_id], references: [id])
-  Module     Module?          @relation(fields: [module_id], references: [id])
-  Person     Person?          @relation(fields: [person_id], references: [id])
+  Company    Company?         @relation(fields: [entity_id], references: [id], onDelete: Cascade, map: "comment_company_fkey")
+  Ressource  Ressource?       @relation(fields: [entity_id], references: [id], onDelete: Cascade, map: "comment_ressource_fkey")
+  Module     Module?          @relation(fields: [entity_id], references: [id], onDelete: Cascade, map: "comment_module_fkey")
+  Person     Person?          @relation(fields: [entity_id], references: [id], onDelete: Cascade, map: "comment_person_fkey")
+}
+
+enum EntityType {
+  COMPANY
+  RESSOURCE
+  MODULE
+  PERSON
 }
 
 model Comment_category {

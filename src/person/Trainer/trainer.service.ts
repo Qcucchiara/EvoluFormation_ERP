@@ -4,6 +4,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { RolePerson } from "src/utils/const";
 import { updateTrainerDTO } from "../dto/update-trainer.dto";
 import { Response } from "express";
+import returnResponse from "src/utils/responseFunctions/res.return";
+import returnError from "src/utils/responseFunctions/error.return";
 
 @Injectable()
 export class TrainerService {
@@ -36,21 +38,9 @@ export class TrainerService {
           role_id: trainerRole.id,
         },
       });
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Le formateur est enregistré.",
-        data: data,
-      });
+      return returnResponse(res, "Formateur créé.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
