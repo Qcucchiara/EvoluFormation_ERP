@@ -29,7 +29,7 @@ export class ProspectService {
       // TODO trouver et verifier si l'entreprise existe
       // TODO faire le type entreprise auto entrepreneur etc
       // TODO faire les commentaires entité
-      await this.prisma.person.create({
+      const data = await this.prisma.person.create({
         data: {
           first_name: dto.first_name,
           last_name: dto.last_name,
@@ -44,13 +44,12 @@ export class ProspectService {
           role_id: role_id.id,
         },
       });
-      return res
-        .status(res.statusCode)
-        .json({ message: "Prospect crée avec succès", statusCode: 201 });
+      return returnResponse(res, "Prospect crée avec succès", data);
+      // return res
+      //   .status(res.statusCode)
+      //   .json({ message: "Prospect crée avec succès", statusCode: 201 });
     } catch (error) {
-      return res
-        .status(error.status)
-        .json({ message: error.message, statusCode: error.status });
+      return returnError(res, error);
     }
   }
   async findAll(res: Response) {

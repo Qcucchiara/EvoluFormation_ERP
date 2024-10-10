@@ -25,22 +25,22 @@ export class trainerController {
   }
 
   @Get()
-  findAll() {
-    return this.trainerService.findAll();
+  findAll(@Res() res: Response) {
+    return this.trainerService.findAll(res);
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.trainerService.findOne(id);
+  findOne(@Param("id") id: string, @Res()res:Response) {
+    return this.trainerService.findOne(id, res);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() dto: updateTrainerDTO) {
-    return this.trainerService.update(id, dto);
+  update(@Param("id") id: string, @Body() dto: updateTrainerDTO, @Res() res:Response) {
+    return this.trainerService.update(id, dto,res);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.trainerService.remove(id);
+  remove(@Param("id") id: string, @Res() res:Response) {
+    return this.trainerService.remove(id,res);
   }
 }

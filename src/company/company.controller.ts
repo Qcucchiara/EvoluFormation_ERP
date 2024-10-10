@@ -28,8 +28,8 @@ export class CompanyController {
   }
 
   @Get()
-  findAll() {
-    return this.companyService.findAll();
+  findAll(@Res() res:Response) {
+    return this.companyService.findAll(res);
   }
 
   // @Get(":id")

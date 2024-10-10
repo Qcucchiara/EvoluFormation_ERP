@@ -15,6 +15,7 @@ import { Response } from "express";
 import * as INDEX from "../utils/index.CommentCategory.json";
 import returnResponse from "src/utils/responseFunctions/res.return";
 import returnError from "src/utils/responseFunctions/error.return";
+import { EntityType } from "@prisma/client";
 
 @Injectable()
 export class CompanyService {
@@ -46,7 +47,8 @@ export class CompanyService {
 
       await this.prisma.comment.create({
         data: {
-          company_id: data.id,
+          entity_id: data.id, //TODO: changer le foreign key.
+          entity_type: EntityType.COMPANY,
           title: "INDEX",
           content: "INDEX",
           category_id: INDEX.INDEX_COMMENT_CATEGORY,
@@ -84,15 +86,21 @@ export class CompanyService {
     }
   }
 
-  async findAll() {
-    return await this.prisma.company.findMany();
+  async findAll(res: Response) {
+    try {
+      const data = await this.prisma.company.findMany();
+      return returnResponse(res, "La liste Entreprise à été envoyé", data);
+    } catch (error) {
+      return returnError(res, error);
+    }
   }
 
   async findOne(id: string, res: Response) {
     try {
       // TODO: Chercher les dossiers associés à l'entreprise
+
       const data = await this.prisma.company.findUnique({ where: { id: id } });
-      return returnResponse(res, "Liste entreprises envoyé.", data);
+      return returnResponse(res, "Entreprise à été envoyé", data);
     } catch (error) {
       return returnError(res, error);
     }

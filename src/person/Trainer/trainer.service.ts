@@ -44,41 +44,43 @@ export class TrainerService {
     }
   }
 
-  async findAll() {
+  async findAll(res: Response) {
     try {
       const trainerRole = await this.prisma.role.findFirst({
         where: {
           name: RolePerson.TRAINER,
         },
       });
-      return await this.prisma.person.findMany({
+
+      const data = await this.prisma.person.findMany({
         where: { role_id: trainerRole.id },
       });
+      return returnResponse(res, "La list Formateur à été envoyé.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return error;
+      return returnError(res, error);
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, res: Response) {
     try {
       const existingProspect = await this.prisma.person.findUnique({
         where: { id: id },
       });
       if (existingProspect) {
         delete existingProspect.role_id;
-        return existingProspect;
+        return returnResponse(
+          res,
+          "Le formateur à été envoyé.",
+          existingProspect,
+        );
       }
       throw new ForbiddenException("Prospect non trouver");
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return error;
+      return returnError(res, error);
     }
   }
 
-  async update(id: string, dto: updateTrainerDTO) {
+  async update(id: string, dto: updateTrainerDTO, res: Response) {
     try {
       const existingTrainer = await this.prisma.person.findUnique({
         where: { id: id },
@@ -104,30 +106,28 @@ export class TrainerService {
           throw new ForbiddenException("Téléphone déja utilisé!");
         }
       }
-      await this.prisma.person.update({ where: { id: id }, data: { ...dto } });
-
-      return { message: "Modification effectuée", statusCode: "200" };
+      const data = await this.prisma.person.update({
+        where: { id: id },
+        data: { ...dto },
+      });
+      return returnResponse(res, "Le formateur est enregistré.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return error;
+      return returnError(res, error);
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string, res: Response) {
     try {
       const existingTrainer = await this.prisma.person.findUnique({
         where: { id: id },
       });
       if (existingTrainer) {
-        await this.prisma.person.delete({ where: { id: id } });
-        return { message: "Formateur supprimé", statusCode: 200 };
+        const data = await this.prisma.person.delete({ where: { id: id } });
+        return returnResponse(res, "Le formateur est enregistré.", data);
       }
       throw new ForbiddenException("Formateur non trouvé");
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      return error;
+      return returnError(res, error);
     }
   }
 }
