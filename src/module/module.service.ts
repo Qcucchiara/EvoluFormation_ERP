@@ -23,74 +23,37 @@ export class ModuleService {
       }
 
       // TODO: rajouter le nom des catégories BPF directement dans la table module
-      dto.duration = dto.duration + "";
+      if (dto.duration) dto.duration = dto.duration + "";
       const data = await this.prisma.module.create({ data: { ...dto } });
 
       createIndexComment(this.prisma, { module_id: data.id });
 
       return returnResponse(res, "Le module a été correctement créé.");
-      // return res.status(res.statusCode).json({
-      //   status: res.statusCode,
-      //   success: true,
-      //   message: "Le module a été correctement créé",
-      //   // data: data,
-      // });
     } catch (error) {
       return returnError(res, error);
-      // console.log("ERROR: " + error.message);
-      // return res.status(error.status).json({
-      //   status: error.status,
-      //   success: false,
-      //   message: error.message,
-      //   // error: { error: "Database connection error" },
-      // });
     }
   }
 
   async findAll(res: Response) {
     try {
       const data = await this.prisma.module.findMany();
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "La liste de modules a été envoyé",
-        data: data,
-      });
+      return returnResponse(res, "La liste de modules a été envoyé", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
   async findOne(id: string, res: Response) {
     try {
-      const findModule = await this.prisma.module.findUnique({
+      const data = await this.prisma.module.findUnique({
         where: { id: id },
       });
-      if (!findModule) {
+      if (!data) {
         throw new ForbiddenException("Le module n'a pas été trouvé");
       }
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "La liste de modules a été envoyé",
-        data: findModule,
-      });
+      return returnResponse(res, "Le module a été envoyé.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
@@ -117,33 +80,16 @@ export class ModuleService {
         data: { ...dto },
       });
 
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "La liste de modules a été envoyé",
-        data: updatedModule,
-      });
+      return returnResponse(res, "Le module a été modifié.");
     } catch (error) {
-      console.log("ERROR: " + error.message);
-
-      res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 
   async remove(id: string, res: Response) {
     try {
       const data = await this.prisma.module.delete({ where: { id: id } });
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "La liste de modules a été envoyé",
-        data: data,
-      });
+      return returnResponse(res, "Module supprimé.", data);
     } catch (error) {
       const content = await handleDeleteOnRestrictResponse(
         this.prisma,
@@ -151,14 +97,8 @@ export class ModuleService {
         "module",
         ["module_has_trainer", "comment"],
       );
-      console.log("ERROR: " + error.message);
 
-      res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message ? error.message : "Unexpected error",
-        error: content,
-      });
+      return returnError(res, error, content);
     }
   }
 }

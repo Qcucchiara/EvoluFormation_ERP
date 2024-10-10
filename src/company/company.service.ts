@@ -15,6 +15,7 @@ import { Response } from "express";
 import * as INDEX from "../utils/index.CommentCategory.json";
 import returnResponse from "src/utils/responseFunctions/res.return";
 import returnError from "src/utils/responseFunctions/error.return";
+import { EntityType } from "@prisma/client";
 
 @Injectable()
 export class CompanyService {
@@ -46,13 +47,15 @@ export class CompanyService {
 
       await this.prisma.comment.create({
         data: {
-          company_id: data.id,
+          entity_id: data.id, //TODO: changer le foreign key.
+          entity_type: EntityType.COMPANY,
           title: "INDEX",
           content: "INDEX",
           category_id: INDEX.INDEX_COMMENT_CATEGORY,
         },
       });
-      return returnResponse(res, "Entreprise créé avec succès", data);
+
+      return returnResponse(res, "Entreprise créée.", data);
     } catch (error) {
       return returnError(res, error);
     }
@@ -76,7 +79,8 @@ export class CompanyService {
       if (!data) {
         throw new ForbiddenException("La relation n'a pas été crée");
       }
-      return returnResponse(res, "Relation créée avec succès", data);
+
+      return returnResponse(res, "Relation créée.", data);
     } catch (error) {
       return returnError(res, error);
     }
@@ -91,10 +95,11 @@ export class CompanyService {
     }
   }
 
-  findOne(id: string, res: Response) {
+  async findOne(id: string, res: Response) {
     try {
       // TODO: Chercher les dossiers associés à l'entreprise
-      const data = this.prisma.company.findUnique({ where: { id: id } });
+
+      const data = await this.prisma.company.findUnique({ where: { id: id } });
       return returnResponse(res, "Entreprise à été envoyé", data);
     } catch (error) {
       return returnError(res, error);
@@ -119,15 +124,12 @@ export class CompanyService {
           throw new ForbiddenException("SIRET déjà utilisé");
         }
       }
-      const updatedCompany = await this.prisma.company.update({
+      const data = await this.prisma.company.update({
         where: { id: id },
         data: { ...dto },
       });
-      return returnResponse(
-        res,
-        "La liste de modules a été envoyé",
-        updatedCompany,
-      );
+      // return { message: null, content: updatedCompany, statusCode: 200 };
+      return returnResponse(res, "Entreprise modifié.", data);
     } catch (error) {
       return returnError(res, error);
     }
@@ -146,25 +148,17 @@ export class CompanyService {
       }
 
       const data = await this.prisma.company.delete({ where: { id: id } });
-      return returnResponse(res, "Entreprise supprimée avec succès", data);
+
+      return returnResponse(res, "Entreprise supprimée.", data);
     } catch (error) {
-      return returnError(res, error);
-
-      // const content = await handleDeleteOnRestrictResponse(
-      //   this.prisma,
-      //   id,
-      //   "company",
-      //   ["company_has_contact", "comment"],
-      //   // true,
-      // );
-
-      // return {
-      //   message:
-      //     "des conflits avec d'autres tableaux ont été trouvés. \n" +
-      //     "Veuillez corriger les contraintes avant de recommencer.",
-      //   content: content,
-      //   statusCode: 409,
-      // };
+      const content = await handleDeleteOnRestrictResponse(
+        this.prisma,
+        id,
+        "company",
+        ["company_has_contact", "comment"],
+        // true,
+      );
+      return returnError(res, error, content);
     }
   }
 }

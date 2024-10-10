@@ -22,9 +22,17 @@ export class CommentController {
     return this.commentService.create(dto, res);
   }
 
-  @Get()
+  @Get("/all")
   findAll(@Res() res: Response) {
     return this.commentService.findAll(res);
+  }
+
+  @Get("/all/:entity_id")
+  findAllFromEntity(
+    @Param("entity_id") entity_id: string,
+    @Res() res: Response,
+  ) {
+    return this.commentService.findAllFromEntity(entity_id, res);
   }
 
   @Get(":id")

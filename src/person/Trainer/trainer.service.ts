@@ -38,7 +38,7 @@ export class TrainerService {
           role_id: trainerRole.id,
         },
       });
-      return returnResponse(res, "Le formateur est enregistré.", data);
+      return returnResponse(res, "Formateur créé.", data);
     } catch (error) {
       return returnError(res, error);
     }

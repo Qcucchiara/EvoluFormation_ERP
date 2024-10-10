@@ -1,21 +1,20 @@
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
+import { EntityType } from "@prisma/client";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from "class-validator";
 
 export class CreateCommentDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsUUID()
-  company_id: string;
+  entity_id: string;
 
-  @IsOptional()
-  @IsUUID()
-  person_id: string;
-
-  @IsOptional()
-  @IsUUID()
-  module_id: string;
-
-  @IsOptional()
-  @IsUUID()
-  ressource_id: string;
+  @IsNotEmpty()
+  @IsEnum(EntityType)
+  entity_type: EntityType;
 
   @IsOptional()
   @IsString()

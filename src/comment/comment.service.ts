@@ -3,6 +3,8 @@ import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Response } from "express";
+import returnResponse from "src/utils/responseFunctions/res.return";
+import returnError from "src/utils/responseFunctions/error.return";
 
 @Injectable()
 export class CommentService {
@@ -10,24 +12,13 @@ export class CommentService {
 
   async create(dto: CreateCommentDto, res: Response) {
     try {
-      const isExistComment = await this.prisma.comment.findMany({
-        where: {
-          OR: [
-            { company_id: dto.company_id },
-            { person_id: dto.person_id },
-            { module_id: dto.module_id },
-            { ressource_id: dto.ressource_id },
-          ],
-        },
+      const isExistComment = await this.prisma.comment.findFirst({
+        where: { entity_id: dto.entity_id },
       });
 
       if (!isExistComment) {
         throw new ForbiddenException(
           "Problème lors de la création de l'entité. (not found)",
-        );
-      } else if (isExistComment.length > 1) {
-        throw new ForbiddenException(
-          "Problème lors de la création de l'entité. (not unique)",
         );
       }
 
@@ -52,40 +43,34 @@ export class CommentService {
       }
       const data = await this.prisma.comment.create({ data: { ...dto } });
 
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Le dossier a été correctement créée",
-        // data: data,
-      });
+      return returnResponse(res, "Commentaire créé.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
-      });
+      return returnError(res, error);
     }
   }
 
   async findAll(res: Response) {
     try {
       const data = await this.prisma.comment.findMany();
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Liste Envoyée",
-        data: data,
-      });
+      return returnResponse(res, "Commentaires envoyés.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
+      return returnError(res, error);
+    }
+  }
+
+  async findAllFromEntity(entity_id: string, res: Response) {
+    try {
+      const data = await this.prisma.comment.findMany({
+        where: { entity_id: entity_id },
+        include: { category: true },
       });
+      if (!data) {
+        // ?: je sais pas quoi mettre ici
+      }
+
+      return returnResponse(res, "Commentaires envoyés.", data);
+    } catch (error) {
+      return returnError(res, error);
     }
   }
 
@@ -96,20 +81,10 @@ export class CommentService {
       if (!data) {
         throw new ForbiddenException("Le commentaire n'a pas été trouvé.");
       }
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Le commentaire est envoyé",
-        data: data,
-      });
+      return returnResponse(res, "Commentaire envoyé.", data);
     } catch (error) {
       console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
-      });
+      return returnError(res, error);
     }
   }
 
@@ -128,20 +103,32 @@ export class CommentService {
         data: { ...dto },
       });
 
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Le dossier a été correctement créée",
-        data: data,
-      });
+      return returnResponse(res, "Commentaire modifié.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
+      return returnError(res, error);
+    }
+  }
+
+  async updateCategory(comment_id: string, category_id: string, res: Response) {
+    try {
+      const isCommentExist = await this.prisma.comment.findUnique({
+        where: { id: comment_id },
       });
+      if (!isCommentExist) {
+        throw new ForbiddenException("Le commentaire n'existe pas.");
+      }
+      const data = await this.prisma.comment.update({
+        where: { id: comment_id },
+        data: { category_id: category_id },
+      });
+
+      return returnResponse(
+        res,
+        "La catégorie du commentaire a été changé.",
+        data,
+      );
+    } catch (error) {
+      return returnError(res, error);
     }
   }
 
@@ -156,21 +143,9 @@ export class CommentService {
       }
 
       const data = await this.prisma.comment.delete({ where: { id: id } });
-
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Le commentaire a été correctement supprimé.",
-        data: data,
-      });
+      return returnResponse(res, "Le commentaire a été supprimé.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
-      });
+      return returnError(res, error);
     }
   }
 }

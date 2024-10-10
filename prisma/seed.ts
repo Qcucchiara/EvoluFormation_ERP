@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { EntityType, PrismaClient, RoleName } from "@prisma/client";
 import * as argon from "argon2";
 import { RolePerson } from "../src/utils/const";
 import * as fs from "node:fs";
@@ -7,28 +7,28 @@ const prisma = new PrismaClient();
 async function main() {
   const prospectRole = await prisma.role.create({
     data: {
-      name: RolePerson.PROSPECT,
+      name: RoleName.Prospect,
       quality: " ",
     },
   });
 
   const studentRole = await prisma.role.create({
     data: {
-      name: RolePerson.STUDENT,
+      name: RoleName.Student,
       quality: " ",
     },
   });
 
   const trainerRole = await prisma.role.create({
     data: {
-      name: RolePerson.TRAINER,
+      name: RoleName.Trainer,
       quality: " ",
     },
   });
 
   const AdminRole = await prisma.role.create({
     data: {
-      name: RolePerson.ADMIN,
+      name: RoleName.Admin,
       quality: " ",
     },
   });
@@ -73,7 +73,8 @@ async function main() {
 
   const adminComment = await prisma.comment.create({
     data: {
-      person_id: admin.id,
+      entity_id: admin.id,
+      entity_type: EntityType.PERSON,
       title: "INDEX",
       content: "INDEX",
       category_id: indexCommentCategory.id,
@@ -90,7 +91,8 @@ async function main() {
 
   const ressourcePCComment = await prisma.comment.create({
     data: {
-      ressource_id: ressourcePC.id,
+      entity_id: ressourcePC.id,
+      entity_type: EntityType.RESSOURCE,
       title: "INDEX",
       content: "INDEX",
       category_id: indexCommentCategory.id,

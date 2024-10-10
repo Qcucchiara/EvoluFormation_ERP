@@ -4,6 +4,8 @@ import { UpdateClientFolderDto } from "./dto/update-client-folder.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { ClientFolder } from "src/schemas/ClientFolder.schema";
 import { Document, Model } from "mongoose";
+import returnResponse from "src/utils/responseFunctions/res.return";
+import returnError from "src/utils/responseFunctions/error.return";
 
 @Injectable()
 export class ClientFolderService {
@@ -18,20 +20,10 @@ export class ClientFolderService {
       // Tentative de correction de l'erreur juste au dessus avec un changement de compagnyId => person_has_compagnyId dans le dto
       const newFolder = new this.clientFolder(dto);
       const data = await newFolder.save();
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Le dossier a été correctement créée",
-        // data: data,
-      });
+
+      return returnResponse(res, "Le dossier a été correctement créée", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: { error: "Database connection error" },
-      });
+      return returnError(res, error);
     }
   }
 

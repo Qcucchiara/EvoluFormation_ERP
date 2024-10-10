@@ -3,6 +3,8 @@ import { CreateCommentCategoryDto } from "./dto/create-comment_category.dto";
 import { UpdateCommentCategoryDto } from "./dto/update-comment_category.dto";
 import { Response } from "express";
 import { PrismaService } from "src/prisma/prisma.service";
+import returnResponse from "src/utils/responseFunctions/res.return";
+import returnError from "src/utils/responseFunctions/error.return";
 
 @Injectable()
 export class CommentCategoryService {
@@ -11,40 +13,19 @@ export class CommentCategoryService {
   create(dto, res: Response) {
     try {
       const data = this.prisma.comment_category.create({ data: { ...dto } });
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "La catégorie a été crée.",
-        // data: data,
-      });
+
+      return returnResponse(res, "Catégorie créée.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
-      });
+      return returnError(res, error);
     }
   }
 
   findAll(res: Response) {
     try {
       const data = this.prisma.comment_category.findMany();
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Liste de catégories envoyée.",
-        data: data,
-      });
+      return returnResponse(res, "Liste catégories envoyée.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
-      });
+      return returnError(res, error);
     }
   }
 
@@ -57,20 +38,9 @@ export class CommentCategoryService {
       if (!data) {
         throw new ForbiddenException("La catégorie n'existe pas.");
       }
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Catégorie envoyée.",
-        data: data,
-      });
+      return returnResponse(res, "Catégorie envoyé.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
-      });
+      return returnError(res, error);
     }
   }
 
@@ -83,26 +53,14 @@ export class CommentCategoryService {
       if (!curentCateory) {
         throw new ForbiddenException("La catégorie n'exise pas.");
       }
-      //TODO: en cours -- Quentin
       const data = await this.prisma.comment_category.update({
         where: { id: id },
         data: { ...dto },
       });
 
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Catégorie modifié avec succès.",
-        data: data,
-      });
+      return returnResponse(res, "Catégorie modifié.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
-      });
+      return returnError(res, error);
     }
   }
 
@@ -119,20 +77,9 @@ export class CommentCategoryService {
       const data = await this.prisma.comment_category.delete({
         where: { id: id },
       });
-      return res.status(res.statusCode).json({
-        status: res.statusCode,
-        success: true,
-        message: "Catégorie supprimée avec succès.",
-        data: data,
-      });
+      return returnResponse(res, "Catégorie supprimée.", data);
     } catch (error) {
-      console.log("ERROR: " + error.message);
-      return res.status(error.status).json({
-        status: error.status,
-        success: false,
-        message: error.message,
-        // error: error,
-      });
+      return returnError(res, error);
     }
   }
 }

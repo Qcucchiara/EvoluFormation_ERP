@@ -64,7 +64,7 @@ export class ProspectService {
           AND: [{ role_id: prospectRole.id }, { is_blacklisted: false }],
         },
       });
-      return returnResponse(res, "La liste de Prospects à été envoyé ", data);
+      return returnResponse(res, "Prospects envoyés.", data);
     } catch (error) {
       return returnError(res, error);
     }
@@ -81,11 +81,7 @@ export class ProspectService {
           AND: [{ role_id: prospectRole.id }, { is_blacklisted: true }],
         },
       });
-      return returnResponse(
-        res,
-        "La liste de Prospects banni à été envoyé ",
-        data,
-      );
+      return returnResponse(res, "Prospects blacklistés envoyés.", data);
     } catch (error) {
       return returnError(res, error);
     }
@@ -97,9 +93,9 @@ export class ProspectService {
       });
       if (existingProspect) {
         delete existingProspect.role_id;
-        return returnResponse(res, "Prospects trouver ", existingProspect);
+        return returnResponse(res, "Prospect envoyé.", existingProspect);
       }
-      throw new ForbiddenException("Prospect non trouver");
+      throw new ForbiddenException("Prospect non trouvé");
     } catch (error) {
       return returnError(res, error);
     }
@@ -134,7 +130,7 @@ export class ProspectService {
         where: { id: id },
         data: { ...dto },
       });
-      return returnResponse(res, "Le prospect à été modifier ", data);
+      return returnResponse(res, "Prospect modifié.", data);
     } catch (error) {
       return returnError(res, error);
     }
@@ -163,7 +159,7 @@ export class ProspectService {
           is_blacklisted: !existingProspect.is_blacklisted,
         },
       });
-      return returnResponse(res, "Modification effectuer", data);
+      return returnResponse(res, "Prospect modifié.", data);
     } catch (error) {
       return returnError(res, error);
     }
@@ -175,7 +171,7 @@ export class ProspectService {
       });
       if (existingProspect) {
         await this.prisma.person.delete({ where: { id: id } });
-        return returnResponse(res, "Prospects trouver ", existingProspect);
+        return returnResponse(res, "Prospect supprimé.", existingProspect);
       }
       throw new ForbiddenException("Prospect non trouvé");
     } catch (error) {
