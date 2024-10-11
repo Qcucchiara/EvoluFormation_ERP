@@ -14,14 +14,22 @@ export class ProspectService {
   constructor(private prisma: PrismaService) {}
   async create(dto: createProspectDto, res: Response) {
     try {
-      const existingProspect = await this.prisma.person.findFirst({
+      const existingEmail = await this.prisma.person.findUnique({
         where: {
-          OR: [{ email: dto.email }, { phone: dto.phone }],
+          email: dto.email,
         },
       });
-      if (existingProspect) {
+      if (existingEmail) {
         //Peut être à modifier la logique
-        throw new ForbiddenException("Prospect déja existant");
+        throw new ForbiddenException("Email déjà utilisé");
+      }
+      const existingPhone = await this.prisma.person.findUnique({
+        where: {
+          phone: dto.phone,
+        },
+      });
+      if (existingPhone) {
+        throw new ForbiddenException("Télphone déjà utilisé");
       }
       const role_id = await this.prisma.role.findUnique({
         where: { name: RolePerson.PROSPECT },
@@ -36,7 +44,7 @@ export class ProspectService {
           civility: dto.civility,
           first_name: dto.first_name,
           last_name: dto.last_name,
-          email: dto.last_name,
+          email: dto.email,
           phone: dto.phone,
           type: dto.type,
           city: dto.city,
