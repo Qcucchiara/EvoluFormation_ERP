@@ -47,7 +47,7 @@ export class CompanyService {
 
       await this.prisma.comment.create({
         data: {
-          entity_id: data.id, //TODO: changer le foreign key.
+          entity_id: data.id,
           entity_type: EntityType.COMPANY,
           title: "INDEX",
           content: "INDEX",

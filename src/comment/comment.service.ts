@@ -5,6 +5,9 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { Response } from "express";
 import returnResponse from "src/utils/responseFunctions/res.return";
 import returnError from "src/utils/responseFunctions/error.return";
+import { capitalizeFirstLetter } from "src/utils/miscellaneous";
+import { Prisma } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 
 @Injectable()
 export class CommentService {
@@ -12,13 +15,30 @@ export class CommentService {
 
   async create(dto: CreateCommentDto, res: Response) {
     try {
-      const isExistComment = await this.prisma.comment.findFirst({
-        where: { entity_id: dto.entity_id },
-      });
+      async function entityExists(entity: any) {
+        const isExist = await entity.findFirst({
+          where: { id: dto.entity_id },
+        });
+        if (isExist) {
+          return isExist;
+        }
+        return false;
+      }
 
-      if (!isExistComment) {
+      async function checkIfAnyEntityExists() {
+        const results = await Promise.all([
+          entityExists(this.prisma.company),
+          entityExists(this.prisma.person),
+          entityExists(this.prisma.module),
+          entityExists(this.prisma.ressource),
+        ]);
+
+        return results.some((result) => result !== false);
+      }
+
+      if (!(await checkIfAnyEntityExists())) {
         throw new ForbiddenException(
-          "Problème lors de la création de l'entité. (not found)",
+          `Entry in ${capitalizeFirstLetter(dto.entity_type.toLowerCase())} not found.`,
         );
       }
 
@@ -29,6 +49,9 @@ export class CommentService {
       if (!category) {
         // vérifier si la catégorie existe, sinon en créer une nouvelle?
         throw new ForbiddenException("La catégorie n'existe pas."); //?: en créer une nouvelle ?
+      }
+
+      if (category.name) {
       }
 
       if (category.is_unique === true) {

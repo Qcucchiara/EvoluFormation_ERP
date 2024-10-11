@@ -51,7 +51,6 @@ model Person {
   companies Company_has_person[]
   modules   Module_has_trainer[]
   Role      Role                 @relation(fields: [role_id], references: [id])
-  comments  Comment[]
   shortcuts Shortcuts[]
 }
 
@@ -93,8 +92,7 @@ model Company {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  contact  Company_has_person[]
-  comments Comment[]
+  contact Company_has_person[]
 }
 
 model Module_has_trainer {
@@ -126,8 +124,6 @@ model Module {
   Speciality_bpf     Speciality_bpf?      @relation(fields: [speciality_bpf_id], references: [id])
   Objective_bpf      Objective_bpf?       @relation(fields: [objective_bpf_id], references: [id])
   Training_objective Training_objective?  @relation(fields: [training_objective_id], references: [id])
-
-  comments Comment[]
 }
 
 model Speciality_bpf {
@@ -163,7 +159,6 @@ model Ressource {
 
   created_at     DateTime       @default(now())
   updated_at     DateTime       @updatedAt
-  comments       Comment[]
   Ressource_type Ressource_type @relation(fields: [type_id], references: [id])
 }
 
@@ -186,10 +181,6 @@ model Comment {
   created_at DateTime         @default(now())
   updated_at DateTime         @updatedAt
   category   Comment_category @relation(fields: [category_id], references: [id])
-  Company    Company?         @relation(fields: [entity_id], references: [id], onDelete: Cascade, map: "comment_company_fkey")
-  Ressource  Ressource?       @relation(fields: [entity_id], references: [id], onDelete: Cascade, map: "comment_ressource_fkey")
-  Module     Module?          @relation(fields: [entity_id], references: [id], onDelete: Cascade, map: "comment_module_fkey")
-  Person     Person?          @relation(fields: [entity_id], references: [id], onDelete: Cascade, map: "comment_person_fkey")
 }
 
 enum EntityType {

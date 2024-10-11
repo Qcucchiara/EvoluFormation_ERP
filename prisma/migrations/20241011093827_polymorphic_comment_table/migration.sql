@@ -1,7 +1,13 @@
+-- CreateEnum
+CREATE TYPE "RoleName" AS ENUM ('Trainer', 'Student', 'Prospect', 'Admin');
+
+-- CreateEnum
+CREATE TYPE "EntityType" AS ENUM ('COMPANY', 'RESSOURCE', 'MODULE', 'PERSON');
+
 -- CreateTable
 CREATE TABLE "Role" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" "RoleName" NOT NULL,
     "quality" TEXT,
 
     CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
@@ -157,10 +163,8 @@ CREATE TABLE "Ressource_type" (
 -- CreateTable
 CREATE TABLE "Comment" (
     "id" TEXT NOT NULL,
-    "company_id" TEXT,
-    "person_id" TEXT,
-    "module_id" TEXT,
-    "ressource_id" TEXT,
+    "entity_id" TEXT NOT NULL,
+    "entity_type" "EntityType" NOT NULL,
     "title" TEXT,
     "content" TEXT NOT NULL,
     "category_id" TEXT NOT NULL,
@@ -235,15 +239,3 @@ ALTER TABLE "Ressource" ADD CONSTRAINT "Ressource_type_id_fkey" FOREIGN KEY ("ty
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "Comment_category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_ressource_id_fkey" FOREIGN KEY ("ressource_id") REFERENCES "Ressource"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_module_id_fkey" FOREIGN KEY ("module_id") REFERENCES "Module"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "Person"("id") ON DELETE SET NULL ON UPDATE CASCADE;

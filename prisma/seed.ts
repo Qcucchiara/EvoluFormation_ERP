@@ -32,6 +32,7 @@ async function main() {
       quality: " ",
     },
   });
+  console.log("Admin Role ID:", AdminRole.id);
 
   const roomCategory = await prisma.ressource_type.create({
     data: { name: "Salle", slug: "salle" },
@@ -44,22 +45,7 @@ async function main() {
   const indexCommentCategory = await prisma.comment_category.create({
     data: { name: "INDEX", is_unique: true },
   });
-
-  fs.writeFile(
-    "./src/utils/index.CommentCategory.json",
-    JSON.stringify(
-      { INDEX_COMMENT_CATEGORY: indexCommentCategory.id },
-      null,
-      2,
-    ),
-    (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("index file written successfully");
-      }
-    },
-  );
+  console.log("Category ID:", indexCommentCategory.id);
 
   const admin = await prisma.person.create({
     data: {
@@ -70,6 +56,10 @@ async function main() {
       password: await argon.hash("root"),
     },
   });
+
+  console.log("Admin ID:", admin.id);
+  console.log("EntityType:", EntityType.PERSON);
+  console.log("INDEX comment category:", indexCommentCategory.id);
 
   const adminComment = await prisma.comment.create({
     data: {

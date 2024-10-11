@@ -8,6 +8,7 @@ import * as INDEX from "../utils/index.CommentCategory.json";
 import createIndexComment from "src/utils/createIndexComment";
 import returnResponse from "src/utils/responseFunctions/res.return";
 import returnError from "src/utils/responseFunctions/error.return";
+import { EntityType } from "@prisma/client";
 
 @Injectable()
 export class ModuleService {
@@ -26,7 +27,10 @@ export class ModuleService {
       if (dto.duration) dto.duration = dto.duration + "";
       const data = await this.prisma.module.create({ data: { ...dto } });
 
-      createIndexComment(this.prisma, { module_id: data.id });
+      createIndexComment(this.prisma, {
+        entity_id: data.id,
+        entity_type: EntityType.MODULE,
+      });
 
       return returnResponse(res, "Le module a été correctement créé.");
     } catch (error) {

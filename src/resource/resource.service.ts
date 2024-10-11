@@ -5,6 +5,8 @@ import { CreateResourceDto, UpdateResourceDto } from "./dto";
 import handleDeleteOnRestrictResponse from "src/utils/handleDeleteOnRestrictResponse";
 import { Response } from "express";
 import * as INDEX from "../utils/index.CommentCategory.json";
+import createIndexComment from "src/utils/createIndexComment";
+import { EntityType } from "@prisma/client";
 
 @Injectable()
 export class ResourceService {
@@ -24,13 +26,9 @@ export class ResourceService {
         data: { type_name: category.name, ...dto },
       });
 
-      await this.prisma.comment.create({
-        data: {
-          ressource_id: data.id,
-          title: "INDEX",
-          content: "INDEX",
-          category_id: INDEX.INDEX_COMMENT_CATEGORY,
-        },
+      createIndexComment(this.prisma, {
+        entity_id: data.id,
+        entity_type: EntityType.RESSOURCE,
       });
       return res.status(res.statusCode).json({
         status: res.statusCode,
