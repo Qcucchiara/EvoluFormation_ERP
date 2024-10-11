@@ -26,7 +26,7 @@ export class ModuleService {
       if (dto.duration) dto.duration = dto.duration + "";
       const data = await this.prisma.module.create({ data: { ...dto } });
 
-      createIndexComment(this.prisma, { module_id: data.id });
+      // createIndexComment(this.prisma, { module_id: data.id });
 
       return returnResponse(res, "Le module a été correctement créé.");
     } catch (error) {

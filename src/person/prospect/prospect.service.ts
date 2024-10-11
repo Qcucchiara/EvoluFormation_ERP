@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { createProspectDto, updateProspectDto } from "../dto";
 import { RolePerson } from "src/utils/const";
@@ -26,28 +30,63 @@ export class ProspectService {
         //Erreur serveur (erreur de dev)
         throw new ForbiddenException("role non trouver");
       }
-      // TODO trouver et verifier si l'entreprise existe
-      // TODO faire le type entreprise auto entrepreneur etc
       // TODO faire les commentaires entité
       const data = await this.prisma.person.create({
         data: {
+          civility: dto.civility,
           first_name: dto.first_name,
           last_name: dto.last_name,
-          email: dto.email,
-          civility: dto.civility,
+          email: dto.last_name,
           phone: dto.phone,
-          // type: dto.type,
-          //company: dto.company????
+          type: dto.type,
           city: dto.city,
           street: dto.street,
           postal_code: dto.postal_code,
           role_id: role_id.id,
         },
       });
+      if (dto.siret && dto.company) {
+        const existingCompany = await this.prisma.company.findUnique({
+          where: {
+            siret: dto.siret,
+          },
+        });
+        if (!existingCompany) {
+          const newCompany = await this.prisma.company.create({
+            data: {
+              name: dto.company,
+              siret: dto.siret,
+            },
+          });
+          await this.prisma.company_has_person.create({
+            data: {
+              company_id: newCompany.id,
+              person_id: data.id,
+            },
+          });
+        } else {
+          await this.prisma.company_has_person.create({
+            data: {
+              company_id: existingCompany.id,
+              person_id: data.id,
+            },
+          });
+        }
+      } else if (dto.company) {
+        const newCompany = await this.prisma.company.create({
+          data: {
+            name: dto.company,
+          },
+        });
+        await this.prisma.company_has_person.create({
+          data: {
+            person_id: data.id,
+            company_id: newCompany.id,
+          },
+        });
+      }
+
       return returnResponse(res, "Prospect crée avec succès", data);
-      // return res
-      //   .status(res.statusCode)
-      //   .json({ message: "Prospect crée avec succès", statusCode: 201 });
     } catch (error) {
       return returnError(res, error);
     }
@@ -168,8 +207,16 @@ export class ProspectService {
     try {
       const existingProspect = await this.prisma.person.findUnique({
         where: { id: id },
+        include: {
+          companies: true,
+        },
       });
       if (existingProspect) {
+        existingProspect.companies.map(async (prospectCompany) => {
+          await this.prisma.company_has_person.delete({
+            where: { id: prospectCompany.id },
+          });
+        });
         await this.prisma.person.delete({ where: { id: id } });
         return returnResponse(res, "Prospect supprimé.", existingProspect);
       }

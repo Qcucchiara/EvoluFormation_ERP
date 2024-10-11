@@ -26,7 +26,8 @@ export class ResourceService {
 
       await this.prisma.comment.create({
         data: {
-          ressource_id: data.id,
+          entity_id: data.id,
+          entity_type: "RESSOURCE",
           title: "INDEX",
           content: "INDEX",
           category_id: INDEX.INDEX_COMMENT_CATEGORY,
