@@ -1,4 +1,4 @@
-import { Type } from "@prisma/client";
+import { ProspectType } from "@prisma/client";
 import {
   IsEmail,
   IsNotEmpty,
@@ -35,8 +35,8 @@ export class updateProspectDto {
 
   @IsString()
   @IsOptional()
-  type: Type;
-  
+  type: ProspectType;
+
   @IsString()
   @IsOptional()
   company: string;

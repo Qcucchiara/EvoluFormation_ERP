@@ -1,11 +1,5 @@
 import { ProspectType } from "@prisma/client";
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateIf,
-} from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 export enum type {
   EMPLOYEE = "Employee",
   JOB_SEEKER = "Job_Seeker",
