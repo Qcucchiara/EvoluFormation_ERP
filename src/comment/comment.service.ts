@@ -90,6 +90,20 @@ export class CommentService {
     }
   }
 
+  async findCategoriesFromEntity(entity_id: string, res: Response) {
+    try {
+      const data = await checkIfAnyEntityExists([
+        entityExists(this.prisma.company, entity_id),
+        entityExists(this.prisma.person, entity_id),
+        entityExists(this.prisma.module, entity_id),
+        entityExists(this.prisma.ressource, entity_id),
+      ]);
+      return returnResponse(res, "catégories envoyés.", data);
+    } catch (error) {
+      return returnError(res, error);
+    }
+  }
+
   async findOne(id: string, res: Response) {
     try {
       const data = await this.prisma.comment.findUnique({ where: { id: id } });

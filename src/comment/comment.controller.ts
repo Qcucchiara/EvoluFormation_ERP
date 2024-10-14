@@ -27,12 +27,20 @@ export class CommentController {
     return this.commentService.findAll(res);
   }
 
-  @Get("/all/:entity_id")
+  @Get("/entity/:entity_id")
   findAllFromEntity(
     @Param("entity_id") entity_id: string,
     @Res() res: Response,
   ) {
     return this.commentService.findAllFromEntity(entity_id, res);
+  }
+
+  @Get("/categories/:entity_id")
+  findCategoriesFromEntity(
+    @Param("entity_id") entity_id: string,
+    @Res() res: Response,
+  ) {
+    return this.commentService.findCategoriesFromEntity(entity_id, res);
   }
 
   @Get(":id")
