@@ -1,5 +1,19 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
-
+import { Type } from "@prisma/client";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateIf,
+} from "class-validator";
+export enum type {
+  EMPLOYEE = "Employee",
+  JOB_SEEKER = "Job_Seeker",
+  BUSINESS_MANAGER = "Business_Manager",
+  RH = "RH",
+  CADRE = "Cadre",
+  TRAINING_MANAGER = "Training_Manager",
+}
 export class createProspectDto {
   @IsString()
   @IsNotEmpty()
@@ -24,11 +38,15 @@ export class createProspectDto {
 
   @IsString()
   @IsOptional()
-  type: string;
+  type: Type;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   company: string;
+
+  @IsString()
+  @IsOptional()
+  siret: string;
 
   @IsString()
   @IsOptional()

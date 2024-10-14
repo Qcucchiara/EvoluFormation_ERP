@@ -44,6 +44,7 @@ model Person {
   street             String?
   postal_code        String?
   note               String?
+  type               Type?
   status             String?  @default("En attente")
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
@@ -52,6 +53,16 @@ model Person {
   modules   Module_has_trainer[]
   Role      Role                 @relation(fields: [role_id], references: [id])
   shortcuts Shortcuts[]
+}
+
+enum Type {
+  EMPLOYEE
+  JOB_SEEKER
+  BUSINESS_MANAGER
+  SELF_FINANCING
+  RH
+  CADRE
+  TRAINING_MANAGER
 }
 
 model Shortcuts {
