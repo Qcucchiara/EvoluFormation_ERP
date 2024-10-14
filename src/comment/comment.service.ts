@@ -5,7 +5,11 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { Response } from "express";
 import returnResponse from "src/utils/responseFunctions/res.return";
 import returnError from "src/utils/responseFunctions/error.return";
-import { capitalizeFirstLetter } from "src/utils/miscellaneous";
+import {
+  capitalizeFirstLetter,
+  checkIfAnyEntityExists,
+  entityExists,
+} from "src/utils/miscellaneous";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
@@ -15,43 +19,30 @@ export class CommentService {
 
   async create(dto: CreateCommentDto, res: Response) {
     try {
-      async function entityExists(entity: any) {
-        const isExist = await entity.findFirst({
-          where: { id: dto.entity_id },
-        });
-        if (isExist) {
-          return isExist;
-        }
-        return false;
-      }
+      const checkIfAnyExist = await checkIfAnyEntityExists([
+        entityExists(this.prisma.company, dto.entity_id),
+        entityExists(this.prisma.person, dto.entity_id),
+        entityExists(this.prisma.module, dto.entity_id),
+        entityExists(this.prisma.ressource, dto.entity_id),
+      ]);
 
-      async function checkIfAnyEntityExists() {
-        const results = await Promise.all([
-          entityExists(this.prisma.company),
-          entityExists(this.prisma.person),
-          entityExists(this.prisma.module),
-          entityExists(this.prisma.ressource),
-        ]);
-
-        return results.some((result) => result !== false);
-      }
-
-      if (!(await checkIfAnyEntityExists())) {
+      if (!checkIfAnyExist) {
         throw new ForbiddenException(
           `Entry in ${capitalizeFirstLetter(dto.entity_type.toLowerCase())} not found.`,
         );
       }
 
-      const category = await this.prisma.comment_category.findUnique({
-        where: { id: dto.category_id },
+      let category = await this.prisma.comment_category.findUnique({
+        where: { name: dto.category_name },
       });
 
       if (!category) {
         // vérifier si la catégorie existe, sinon en créer une nouvelle?
-        throw new ForbiddenException("La catégorie n'existe pas."); //?: en créer une nouvelle ?
-      }
+        //// throw new ForbiddenException("La catégorie n'existe pas.");
 
-      if (category.name) {
+        category = await this.prisma.comment_category.create({
+          data: { name: dto.category_name, is_unique: dto.is_unique },
+        });
       }
 
       if (category.is_unique === true) {
@@ -64,7 +55,9 @@ export class CommentService {
           );
         }
       }
-      const data = await this.prisma.comment.create({ data: { ...dto } });
+      const data = await this.prisma.comment.create({
+        data: { category_id: category.id, ...dto },
+      });
 
       return returnResponse(res, "Commentaire créé.", data);
     } catch (error) {
@@ -121,6 +114,19 @@ export class CommentService {
         throw new ForbiddenException("Le commentaire n'existe pas.");
       }
 
+      const checkIfAnyExist = await checkIfAnyEntityExists([
+        entityExists(this.prisma.company, dto.entity_id),
+        entityExists(this.prisma.person, dto.entity_id),
+        entityExists(this.prisma.module, dto.entity_id),
+        entityExists(this.prisma.ressource, dto.entity_id),
+      ]);
+
+      if (!checkIfAnyExist) {
+        throw new ForbiddenException(
+          `Entry in ${capitalizeFirstLetter(dto.entity_type.toLowerCase())} not found.`,
+        );
+      }
+
       const data = await this.prisma.comment.update({
         where: { id: id },
         data: { ...dto },
@@ -140,9 +146,15 @@ export class CommentService {
       if (!isCommentExist) {
         throw new ForbiddenException("Le commentaire n'existe pas.");
       }
+
+      const category = await this.prisma.comment_category.findUnique({
+        where: { id: category_id },
+        include: { comment: true },
+      });
+
       const data = await this.prisma.comment.update({
         where: { id: comment_id },
-        data: { category_id: category_id },
+        data: { category_id: category.id },
       });
 
       return returnResponse(

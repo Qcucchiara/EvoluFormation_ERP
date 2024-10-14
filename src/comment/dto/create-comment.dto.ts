@@ -1,5 +1,6 @@
 import { EntityType } from "@prisma/client";
 import {
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -25,6 +26,10 @@ export class CreateCommentDto {
   content: string;
 
   @IsNotEmpty()
-  @IsUUID()
-  category_id: string;
+  @IsString()
+  category_name: string;
+
+  @IsOptional()
+  @IsBoolean()
+  is_unique: boolean;
 }
