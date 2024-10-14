@@ -28,26 +28,26 @@ enum RoleName {
 }
 
 model Person {
-  id                 String   @id @default(uuid())
+  id                 String        @id @default(uuid())
   role_id            String
   first_name         String
   last_name          String
-  email              String   @unique
-  is_blacklisted     Boolean  @default(false)
+  email              String        @unique
+  is_blacklisted     Boolean       @default(false)
   password           String?
   cities_of_activity String[]
   civility           String?
-  phone              String?  @unique
+  phone              String?       @unique
   birth_date         String?
   birth_city         String?
   city               String?
   street             String?
   postal_code        String?
   note               String?
-  type               Type?
-  status             String?  @default("En attente")
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
+  type               ProspectType?
+  status             String?       @default("En attente")
+  created_at         DateTime      @default(now())
+  updated_at         DateTime      @updatedAt
 
   companies Company_has_person[]
   modules   Module_has_trainer[]
@@ -55,7 +55,7 @@ model Person {
   shortcuts Shortcuts[]
 }
 
-enum Type {
+enum ProspectType {
   EMPLOYEE
   JOB_SEEKER
   BUSINESS_MANAGER
